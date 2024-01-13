@@ -344,7 +344,7 @@ Weight: 130 lbs
 The blue Honda, male and 6 feet tall are suitable only for `Jeremy Bowers` or `Joe Germuska`.  
 
 
-##### 5. Let's check the membership in the clubs
+##### 5. Let's check the membership cards
 `cd ~/clmystery/mystery/memberships && cat Rotary_Club Delta_SkyMiles Terminal_City_Library Museum_of_Bash_History | grep -c "Jeremy Bowers"`  
 ```console
 3
