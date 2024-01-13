@@ -245,20 +245,6 @@ License Plate L3375A9
 License Plate L337WR9
 ```
 
-`head vehicles`  
-```console
-***************
-Vehicle and owner information from the Terminal City Department of Motor Vehicles
-***************
-
-License Plate T3YUHF6
-Make: Toyota
-Color: Yellow
-Owner: Jianbo Megannem
-Height: 5'6"
-Weight: 246 lbs
-```
-
 `grep -A 5 "L337" vehicles`  
 ```console
 License Plate L337ZR9
