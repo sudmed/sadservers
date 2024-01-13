@@ -12,8 +12,7 @@ Test: Running `md5sum /home/admin/solution` returns `d80e026d18a57b56bddf1d99a8a
 
 ### Solution:
 #### 1. Reconnaissance on the server
-`cd /home/admin`
-`ls -la`
+`cd /home/admin && ls -la`
 ```console
 total 2000
 drwxr-xr-x 5 admin admin   4096 Nov 20  2022 .
