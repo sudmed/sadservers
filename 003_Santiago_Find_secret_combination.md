@@ -7,6 +7,8 @@ Write both numbers consecutively as one (no new line or spaces) to the solution 
   
 Test: Running `md5sum /home/admin/solution` returns `d80e026d18a57b56bddf1d99a8a491f9` (just a way to verify the solution without giving it away).  
 
+### Solution
+
 ```bash
 admin@i-068844a34e82f4dae:~$ grep -rwc "Alice" /home/admin/*.txt
 /home/admin/11-0.txt:397
@@ -32,3 +34,5 @@ admin@i-068844a34e82f4dae:~$ cat /home/admin/solution
 admin@i-068844a34e82f4dae:~$ md5sum /home/admin/solution
 d80e026d18a57b56bddf1d99a8a491f9  /home/admin/solution
 ```
+
+#### [Issue #50](https://github.com/fduran/sadservers/issues/50)
