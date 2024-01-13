@@ -18,8 +18,8 @@ admin@i-068844a34e82f4dae:~$ grep -rwc "Alice" /home/admin/*.txt
 ```
 
 ```bash
-admin@i-068844a34e82f4dae:~$ grep -rwc "Alice" /home/admin/*.txt | awk -F ':' '{total += $2} END {print total}'
-410
+admin@i-068844a34e82f4dae:~$ grep -rc "Alice" /home/admin/*.txt | awk -F ':' '{total += $2} END {print total}'
+411
 ```
 
 ```bash
@@ -28,9 +28,9 @@ admin@i-068844a34e82f4dae:~$ grep -l "Alice" /home/admin/1342-0.txt | xargs awk 
 ```
 
 ```bash
-echo "410156" > /home/admin/solution
+echo "411156" > /home/admin/solution
 admin@i-068844a34e82f4dae:~$ cat /home/admin/solution
-410156
+411156
 admin@i-068844a34e82f4dae:~$ md5sum /home/admin/solution
 d80e026d18a57b56bddf1d99a8a491f9  /home/admin/solution
 ```
