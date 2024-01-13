@@ -33,7 +33,7 @@ drwxr-xr-x 2 admin admin   4096 Nov 21  2022 agent
 ```
 
 #### 2. Find the number of lines with occurrences of the string Alice
-#### 2.1. Simple way to check occurrences as words
+##### 2.1. Simple way to check occurrences as words
 `grep -rwc "Alice" /home/admin/*.txt`  
 ```console
 /home/admin/11-0.txt:397
@@ -46,7 +46,7 @@ drwxr-xr-x 2 admin admin   4096 Nov 21  2022 agent
 410
 ```
 
-#### 2.2. Let's check for double occurrences in one string
+##### 2.2. Let's check for double occurrences in one string
 `grep -En '(\bAlice\b.*){2,}' /home/admin/11-0.txt`  
 ```console
 1592:Alice coming. “There’s _plenty_ of room!” said Alice indignantly, and
@@ -54,7 +54,7 @@ drwxr-xr-x 2 admin admin   4096 Nov 21  2022 agent
 2359:“Let’s go on with the game,” the Queen said to Alice; and Alice was too
 ```
 
-#### 2.3. Сheck the occurrences of strings, not words
+##### 2.3. Сheck the occurrences of strings, not words
 `grep -rc "Alice" /home/admin/*.txt`  
 ```console
 /home/admin/11-0.txt:398
