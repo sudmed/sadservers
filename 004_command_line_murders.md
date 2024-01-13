@@ -363,9 +363,17 @@ cat: United_MileagePlus: No such file or directory
 ```
 
 
-#### 4. Follow the hints
-
-
-``  
+#### 4. Validate the task
+`cat /home/admin/agent/check.sh`  
 ```console
+#!/usr/bin/bash
+res=$(md5sum /home/admin/mysolution |awk '{print $1}')
+res=$(echo $res|tr -d '\r')
+
+if [[ "$res" = "9bba101c7369f49ca890ea96aa242dd5" ]]
+then
+  echo -n "OK"
+else
+  echo -n "NO"
+fi
 ```
