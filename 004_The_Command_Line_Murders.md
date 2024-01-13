@@ -217,6 +217,11 @@ Annabel Fuglsang        M       40      Haley Street, line 176
 SEE INTERVIEW #9437737
 ```
 
+`cat clmystery/mystery/interviews/interview-9437737`  
+```console
+Doesn't appear to be the witness from the cafe, who is female.
+```
+
 `grep "Honda" vehicles`  
 ```console
 Make: Honda
