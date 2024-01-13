@@ -222,18 +222,14 @@ SEE INTERVIEW #9437737
 Doesn't appear to be the witness from the cafe, who is female.
 ```
 
-`grep "Honda" vehicles`  
 ```console
+grep "Honda" vehicles
 Make: Honda
-```
 
-`grep "Blue" vehicles`  
-```console
+grep "Blue" vehicles
 Color: Blue
-```
 
-`grep "L337" vehicles`  
-```console
+grep "L337" vehicles
 License Plate L337ZR9
 License Plate L337P89
 License Plate L337GX9
