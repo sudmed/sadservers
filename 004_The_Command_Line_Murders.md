@@ -11,6 +11,7 @@ Test: `md5sum ~/mysolution` returns `9bba101c7369f49ca890ea96aa242dd5`.
 ---
 
 ### Solution:
+
 #### 1. Reconnaissance on the server
 `cd /home/admin/ && ls -la`  
 ```console
@@ -87,6 +88,7 @@ To get started on how to use the command line, open cheatsheet.md or cheatsheet.
 Don't use a text editor to view any files except these instructions, the cheatsheet, and hints.
 ```
 
+#### 2. Check hints
 `cat hint1`  
 ```console
 Try poking around what's in a file by using the 'head' command:
@@ -146,4 +148,237 @@ If you only want to see the number of matches, you can use grep's -c option (the
         cat Fitness_Galaxy AAA United_MileagePlus | grep -c "John Smith"
 Or you can pipe the result to 'wc -l':
         cat Fitness_Galaxy AAA United_MileagePlus | grep "John Smith" | wc -l
+```
+
+#### 3. Follow the hints
+`head -n 20 people`  
+```console
+***************
+To go to the street someone lives on, use the file
+for that street name in the 'streets' subdirectory.
+To knock on their door and investigate, read the line number
+they live on from the file.  If a line looks like gibberish, you're at the wrong house.
+***************
+NAME    GENDER  AGE     ADDRESS
+Alicia Fuentes  F       48      Walton Street, line 433
+Jo-Ting Losev   F       46      Hemenway Street, line 390
+Elena Edmonds   F       58      Elmwood Avenue, line 123
+Naydene Cabral  F       46      Winthrop Street, line 454
+Dato Rosengren  M       22      Mystic Street, line 477
+Fernanda Serrano        F       37      Redlands Road, line 392
+Emiliano Wenk   M       90      Paulding Street, line 490
+Larry Lapin     M       71      Atwill Road, line 298
+Jakub Gondos    M       61      Mitchell Street, line 187
+Derek Kazanin   M       55      Tennis Road, line 440
+Jens Tuimalealiifano    M       83      Rockwood Street, line 205
+Nikola Kadhi    M       75      Glenville Avenue, line 226
+```
+
+`grep "CLUE" crimescene`  
+```console
+CLUE: Footage from an ATM security camera is blurry but shows that the perpetrator is a tall male, at least 6'.
+CLUE: Found a wallet believed to belong to the killer: no ID, just loose change, and membership cards for Rotary_Club, Delta SkyMiles, the local library, and the Museum of Bash History. The cards are totally untraceable and have no name, for some reason.
+CLUE: Questioned the barista at the local coffee shop. He said a woman left right before they heard the shots. The name on her latte was Annabel, she had blond spiky hair and a New Zealand accent.
+```
+
+`head -n 20 vehicles`  
+```console
+***************
+Vehicle and owner information from the Terminal City Department of Motor Vehicles
+***************
+License Plate T3YUHF6
+Make: Toyota
+Color: Yellow
+Owner: Jianbo Megannem
+Height: 5'6"
+Weight: 246 lbs
+
+License Plate EZ21ECE
+Make: BMW
+Color: Gold
+Owner: Norbert Feldwehr
+Height: 5'3"
+Weight: 205 lbs
+
+License Plate CQN2TJE
+Make: Mazda
+```
+
+`grep "Annabel" people`  
+```console
+Annabel Sun     F       26      Hart Place, line 40
+Oluwasegun Annabel      M       37      Mattapan Street, line 173
+Annabel Church  F       38      Buckingham Place, line 179
+Annabel Fuglsang        M       40      Haley Street, line 176
+```
+
+`head -n 173 streets/Mattapan_Street | tail -n 1`  
+```console
+SEE INTERVIEW #9437737
+```
+
+`grep "Honda" vehicles`  
+```console
+Make: Honda
+```
+
+`grep "Blue" vehicles`  
+```console
+Color: Blue
+```
+
+`grep "L337" vehicles`  
+```console
+License Plate L337ZR9
+License Plate L337P89
+License Plate L337GX9
+License Plate L337QE9
+License Plate L337GB9
+License Plate L337OI9
+License Plate L337X19
+License Plate L337539
+License Plate L3373U9
+License Plate L337369
+License Plate L337DV9
+License Plate L3375A9
+License Plate L337WR9
+```
+
+`head vehicles`  
+```console
+***************
+Vehicle and owner information from the Terminal City Department of Motor Vehicles
+***************
+
+License Plate T3YUHF6
+Make: Toyota
+Color: Yellow
+Owner: Jianbo Megannem
+Height: 5'6"
+Weight: 246 lbs
+```
+
+`grep -A 5 "L337" vehicles`  
+```console
+License Plate L337ZR9
+Make: Honda
+Color: Red
+Owner: Katie Park
+Height: 6'2"
+Weight: 189 lbs
+--
+License Plate L337P89
+Make: Honda
+Color: Teal
+Owner: Mike Bostock
+Height: 6'4"
+Weight: 173 lbs
+--
+License Plate L337GX9
+Make: Mazda
+Color: Orange
+Owner: John Keefe
+Height: 6'4"
+Weight: 185 lbs
+--
+License Plate L337QE9
+Make: Honda
+Color: Blue
+Owner: Erika Owens
+Height: 6'5"
+Weight: 220 lbs
+--
+License Plate L337GB9
+Make: Toyota
+Color: Blue
+Owner: Matt Waite
+Height: 6'1"
+Weight: 190 lbs
+--
+License Plate L337OI9
+Make: Jaguar
+Color: Blue
+Owner: Brian Boyer
+Height: 6'6"
+Weight: 201 lbs
+--
+License Plate L337X19
+Make: Fiat
+Color: Blue
+Owner: Al Shaw
+Height: 6'5"
+Weight: 240 lbs
+--
+License Plate L337539
+Make: Honda
+Color: Blue
+Owner: Aron Pilhofer
+Height: 5'3"
+Weight: 198 lbs
+--
+License Plate L3373U9
+Make: Ford
+Color: Blue
+Owner: Miranda Mulligan
+Height: 6'6"
+Weight: 156 lbs
+--
+License Plate L337369
+Make: Honda
+Color: Blue
+Owner: Heather Billings
+Height: 5'2"
+Weight: 244 lbs
+--
+License Plate L337DV9
+Make: Honda
+Color: Blue
+Owner: Joe Germuska
+Height: 6'2"
+Weight: 164 lbs
+--
+License Plate L3375A9
+Make: Honda
+Color: Blue
+Owner: Jeremy Bowers
+Height: 6'1"
+Weight: 204 lbs
+--
+License Plate L337WR9
+Make: Honda
+Color: Blue
+Owner: Jacqui Maher
+Height: 6'2"
+Weight: 130 lbs
+```
+
+`cat Fitness_Galaxy AAA United_MileagePlus | grep "John Smith"`  
+```console
+cat: Fitness_Galaxy: No such file or directory
+cat: AAA: No such file or directory
+cat: United_MileagePlus: No such file or directory
+```
+
+`cat Fitness_Galaxy AAA United_MileagePlus | grep -c "John Smith"`  
+```console
+cat: Fitness_Galaxy: No such file or directory
+cat: AAA: No such file or directory
+cat: United_MileagePlus: No such file or directory
+0
+```
+
+`cat Fitness_Galaxy AAA United_MileagePlus | grep "John Smith" | wc -l`  
+```console
+cat: Fitness_Galaxy: No such file or directory
+cat: AAA: No such file or directory
+cat: United_MileagePlus: No such file or directory
+0
+```
+
+
+#### 4. Follow the hints
+
+
+``  
+```console
 ```
