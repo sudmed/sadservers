@@ -345,18 +345,18 @@ The blue Honda, male and 6 feet tall are suitable only for `Jeremy Bowers` or `J
 
 
 ##### 5. Let's check the membership in the clubs
-`cat ~/clmystery/mystery/memberships/Rotary_Club ~/clmystery/mystery/memberships/Delta_SkyMiles ~/clmystery/mystery/memberships/Terminal_City_Library ~/clmystery/mystery/memberships/Museum_of_Bash_History | grep -c "Jeremy Bowers"`  
+`cd ~/clmystery/mystery/memberships && cat Rotary_Club Delta_SkyMiles Terminal_City_Library Museum_of_Bash_History | grep -c "Jeremy Bowers"`  
 ```console
 3
 ```
 
-`cat ~/clmystery/mystery/memberships/Rotary_Club ~/clmystery/mystery/memberships/Delta_SkyMiles ~/clmystery/mystery/memberships/Terminal_City_Library ~/clmystery/mystery/memberships/Museum_of_Bash_History | grep -c "Joe Germuska"`  
+`cd ~/clmystery/mystery/memberships && cat Rotary_Club Delta_SkyMiles Terminal_City_Library Museum_of_Bash_History | grep -c "Joe Germuska"`  
 ```console
 4
 ```
 
 
-#### 6. Name of the murderer
+#### 6. Name of the murderer is Joe Germuska
 `echo "Joe Germuska" > ~/mysolution`  
 
 `md5sum ~/mysolution`  
