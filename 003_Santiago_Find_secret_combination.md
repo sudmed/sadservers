@@ -32,30 +32,60 @@ drwxr-xr-x 2 admin admin   4096 Nov 21  2022 agent
 -rw-r--r-- 1 admin admin      0 Nov 21  2022 solution
 ```
 
-```bash
-admin@i-068844a34e82f4dae:~$ grep -rwc "Alice" /home/admin/*.txt
+#### 2. Find the number of lines with occurrences of the string Alice
+#### 2.1. Simple way to check occurrences as words
+`grep -rwc "Alice" /home/admin/*.txt`  
+```console
 /home/admin/11-0.txt:397
 /home/admin/1342-0.txt:1
 /home/admin/1661-0.txt:12
 /home/admin/84-0.txt:0
 ```
+`grep -rwc "Alice" /home/admin/*.txt | awk -F ':' '{total += $2} END {print total}'`
+```console
+410
+```
 
-```bash
-admin@i-068844a34e82f4dae:~$ grep -rc "Alice" /home/admin/*.txt | awk -F ':' '{total += $2} END {print total}'
+#### 2.2. Let's check for double occurrences in one string
+`grep -En '(\bAlice\b.*){2,}' /home/admin/11-0.txt`  
+```console
+1592:Alice coming. “There’s _plenty_ of room!” said Alice indignantly, and
+1996:“My name is Alice, so please your Majesty,” said Alice very politely;
+2359:“Let’s go on with the game,” the Queen said to Alice; and Alice was too
+```
+
+#### 2.3. Сheck the occurrences of strings, not words
+`grep -rc "Alice" /home/admin/*.txt`  
+```console
+/home/admin/11-0.txt:398
+/home/admin/1342-0.txt:1
+/home/admin/1661-0.txt:12
+/home/admin/84-0.txt:0
+```
+`grep -rc "Alice" /home/admin/*.txt | awk -F ':' '{total += $2} END {print total}'`  
+```console
 411
 ```
 
-```bash
-admin@i-068844a34e82f4dae:~$ grep -l "Alice" /home/admin/1342-0.txt | xargs awk '/Alice/ {getline; print $1}'
+#### 3. Find a number in the file where Alice appears exactly once
+`grep -l "Alice" /home/admin/1342-0.txt | xargs awk '/Alice/ {getline; print $1}'`  
+```console
 156
 ```
 
-```bash
-echo "411156" > /home/admin/solution
-admin@i-068844a34e82f4dae:~$ cat /home/admin/solution
+#### 4. Concatenate two numbers
+`echo "411156" > /home/admin/solution`  
+`cat /home/admin/solution`
+```console
 411156
-admin@i-068844a34e82f4dae:~$ md5sum /home/admin/solution
+```
+
+#### 5. Validate the task
+`md5sum /home/admin/solution`  
+```console
 d80e026d18a57b56bddf1d99a8a491f9  /home/admin/solution
 ```
 
+---
 #### [Issue #50](https://github.com/fduran/sadservers/issues/50)
+
