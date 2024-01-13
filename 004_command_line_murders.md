@@ -339,31 +339,33 @@ Height: 6'2"
 Weight: 130 lbs
 ```
 
-`cat Fitness_Galaxy AAA United_MileagePlus | grep "John Smith"`  
+
+##### 4. Narrowing the circle of suspects
+The blue Honda, male and 6 feet tall are suitable only for `Jeremy Bowers` or `Joe Germuska`.  
+
+
+##### 5. Let's check the membership in the clubs
+`cat ~/clmystery/mystery/memberships/Rotary_Club ~/clmystery/mystery/memberships/Delta_SkyMiles ~/clmystery/mystery/memberships/Terminal_City_Library ~/clmystery/mystery/memberships/Museum_of_Bash_History | grep -c "Jeremy Bowers"`  
 ```console
-cat: Fitness_Galaxy: No such file or directory
-cat: AAA: No such file or directory
-cat: United_MileagePlus: No such file or directory
+3
 ```
 
-`cat Fitness_Galaxy AAA United_MileagePlus | grep -c "John Smith"`  
+`cat ~/clmystery/mystery/memberships/Rotary_Club ~/clmystery/mystery/memberships/Delta_SkyMiles ~/clmystery/mystery/memberships/Terminal_City_Library ~/clmystery/mystery/memberships/Museum_of_Bash_History | grep -c "Joe Germuska"`  
 ```console
-cat: Fitness_Galaxy: No such file or directory
-cat: AAA: No such file or directory
-cat: United_MileagePlus: No such file or directory
-0
-```
-
-`cat Fitness_Galaxy AAA United_MileagePlus | grep "John Smith" | wc -l`  
-```console
-cat: Fitness_Galaxy: No such file or directory
-cat: AAA: No such file or directory
-cat: United_MileagePlus: No such file or directory
-0
+4
 ```
 
 
-#### 4. Validate the task
+#### 6. Name of the murderer
+`echo "Joe Germuska" > ~/mysolution`  
+
+`md5sum ~/mysolution`  
+```console
+9bba101c7369f49ca890ea96aa242dd5  /home/admin/mysolution
+```
+
+
+#### 7. Validate the task
 `cat /home/admin/agent/check.sh`  
 ```console
 #!/usr/bin/bash
@@ -376,4 +378,9 @@ then
 else
   echo -n "NO"
 fi
+```
+
+`bash /home/admin/agent/check.sh`  
+```console
+OK
 ```
