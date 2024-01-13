@@ -8,10 +8,11 @@ Test: The SHA1 checksum of the IP address `sha1sum /home/admin/highestip.txt` is
 
 ---
 
-```bash
-admin@ip-172-31-27-155:~$ cd /home/admin/
+### Solution:
 
-admin@ip-172-31-27-155:~$ tail -10  access.log
+#### 1. Check log format
+`tail -10  /home/admin/access.log`  
+```console
 66.249.73.135 - - [20/May/2015:21:05:11 +0000] "GET /blog/tags/xsendevent HTTP/1.1" 200 10049 "-" "Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
 198.46.149.143 - - [20/May/2015:21:05:29 +0000] "GET /blog/geekery/disabling-battery-in-ubuntu-vms.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+semicomplete%2Fmain+%28semicomplete.com+-+Jordan+Sissel%29 HTTP/1.1" 200 9316 "-" "Tiny Tiny RSS/1.11 (http://tt-rss.org/)"
 198.46.149.143 - - [20/May/2015:21:05:34 +0000] "GET /blog/geekery/solving-good-or-bad-problems.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+semicomplete%2Fmain+%28semicomplete.com+-+Jordan+Sissel%29 HTTP/1.1" 200 10756 "-" "Tiny Tiny RSS/1.11 (http://tt-rss.org/)"
@@ -22,12 +23,19 @@ admin@ip-172-31-27-155:~$ tail -10  access.log
 66.249.73.135 - - [20/May/2015:21:05:00 +0000] "GET /?flav=atom HTTP/1.1" 200 32352 "-" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
 180.76.6.56 - - [20/May/2015:21:05:56 +0000] "GET /robots.txt HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 5.1; rv:6.0.2) Gecko/20100101 Firefox/6.0.2"
 46.105.14.53 - - [20/May/2015:21:05:15 +0000] "GET /blog/tags/puppet?flav=rss20 HTTP/1.1" 200 14872 "-" "UniversalFeedParser/4.2-pre-314-svn +http://feedparser.org/"
+```
 
-admin@ip-172-31-27-155:~$ awk '{ print $1 }' /home/admin/access.log | sort | uniq -c | sort -nr | head -n 1
+#### 2. Extract the first field (column) from each line of the access.log, when sort, uniqalize, sort again in descending order based on the occurrence count and select only the first line with the highest count of occurrences
+`awk '{ print $1 }' /home/admin/access.log | sort | uniq -c | sort -nr | head -n 1`
+```console
 482 66.249.73.135
+```
 
-admin@ip-172-31-27-155:~$ echo "66.249.73.135" > /home/admin/highestip.txt
+#### 3. Write the solution into a file
+`echo "66.249.73.135" > /home/admin/highestip.txt`
 
-admin@ip-172-31-27-155:~$ sha1sum /home/admin/highestip.txt
+#### 4. Validate the task
+`sha1sum /home/admin/highestip.txt`
+```console
 6ef426c40652babc0d081d438b9f353709008e93  /home/admin/highestip.txt
 ```
