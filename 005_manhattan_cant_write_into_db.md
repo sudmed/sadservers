@@ -905,3 +905,77 @@ pg_ctl: could not start server
 Examine the log output.
 ```
 
+
+#### 2. Problem seems like No space left on device what's why postgres daemon could not start server
+`df -h`  
+```console
+Filesystem       Size  Used Avail Use% Mounted on
+udev             224M     0  224M   0% /dev
+tmpfs             47M  1.5M   46M   4% /run
+/dev/nvme1n1p1   7.7G  1.2G  6.1G  17% /
+tmpfs            233M     0  233M   0% /dev/shm
+tmpfs            5.0M     0  5.0M   0% /run/lock
+tmpfs            233M     0  233M   0% /sys/fs/cgroup
+/dev/nvme1n1p15  124M  278K  124M   1% /boot/efi
+/dev/nvme0n1     8.0G  8.0G   28K 100% /opt/pgdata
+```
+
+
+#### 3. Let's free up some space on the disk /dev/nvme0n1
+`cd /opt/pgdata && ls -la`  
+```console
+total 8285624
+drwxr-xr-x  3 postgres postgres         82 May 21  2022 .
+drwxr-xr-x  3 root     root           4096 May 21  2022 ..
+-rw-r--r--  1 root     root             69 May 21  2022 deleteme
+-rw-r--r--  1 root     root     7516192768 May 21  2022 file1.bk
+-rw-r--r--  1 root     root      967774208 May 21  2022 file2.bk
+-rw-r--r--  1 root     root         499712 May 21  2022 file3.bk
+drwx------ 19 postgres postgres       4096 May 21  2022 main
+```
+
+`rm deleteme`  
+`rm *.bk`  
+`df -h`  
+```console
+Filesystem       Size  Used Avail Use% Mounted on
+udev             224M     0  224M   0% /dev
+tmpfs             47M  1.5M   46M   4% /run
+/dev/nvme1n1p1   7.7G  1.2G  6.1G  17% /
+tmpfs            233M     0  233M   0% /dev/shm
+tmpfs            5.0M     0  5.0M   0% /run/lock
+tmpfs            233M     0  233M   0% /sys/fs/cgroup
+/dev/nvme1n1p15  124M  278K  124M   1% /boot/efi
+/dev/nvme0n1     8.0G   91M  8.0G   2% /opt/pgdata
+```
+
+
+#### 4. Let's restart the server and check if psql can run
+`systemctl restart postgresql`  
+`systemctl status postgresql`  
+```console
+● postgresql.service - PostgreSQL RDBMS
+   Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+   Active: active (exited) since Sat 2024-01-13 20:35:12 UTC; 2s ago
+  Process: 892 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
+ Main PID: 892 (code=exited, status=0/SUCCESS)
+
+Jan 13 20:35:12 i-071294ec816bc4ccc systemd[1]: Starting PostgreSQL RDBMS...
+Jan 13 20:35:12 i-071294ec816bc4ccc systemd[1]: Started PostgreSQL RDBMS.
+```
+
+`su - postgres`  
+```console
+postgres@i-005db1f28ddbc42fc:~$ psql
+psql (14.3 (Debian 14.3-1.pgdg100+1))
+Type "help" for help.
+
+postgres=# exit
+```
+
+
+#### 5. Validate the task
+`sudo -u postgres psql -c "insert into persons(name) values ('jane smith');" -d dt`  
+```console
+INSERT 0 1
+```
