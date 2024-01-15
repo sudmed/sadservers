@@ -47,7 +47,7 @@ done
 `./script.sh`  
 
 
-#### 3. Validate the task
+#### 3. Send request to web server and get a message
 `echo $(curl localhost)`  
 ```console
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -56,6 +56,8 @@ done
 Who is there?
 ```
 
+
+#### 4. Validate the task
 `echo "Who is there?" | md5sum | awk '{print $1}'`  
 ```console
 fe474f8e1c29e9f412ed3b726369ab65
