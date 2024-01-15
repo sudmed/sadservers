@@ -39,7 +39,7 @@ rtt min/avg/max/mdev = 0.039/0.050/0.064/0.009 ms
 `touch script.sh && chmod +x script.sh && vi script.sh`  
 ```bash
 #!/bin/bash
-for port in {1..65365}; do
+for port in {1..65535}; do
   knock localhost $port
   echo "$port"
 done
