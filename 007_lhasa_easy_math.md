@@ -33,9 +33,10 @@ drwxr-xr-x 2 admin root  4096 Nov 21 02:26 agent
 ```
 
 
+`cat /home/admin/scores.txt`  
 <details>
 
-  <summary>cat /home/admin/scores.txt </summary>
+  <summary>output</summary>
 
 ```console
 1 7.4
