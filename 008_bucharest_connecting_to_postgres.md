@@ -246,10 +246,12 @@ host    replication     all             ::1/128                 md5
 #### 2. Problem seems like connection method is `reject` (even twice)
 `cat /etc/postgresql/14/main/postgresql.conf`  
 ```console
+<...>
 # Database administrative login by Unix domain socket
 local   all             postgres                                peer
 host    all             all             all                     reject
 host    all             all             all                     reject
+<...>
 ```
 
 
