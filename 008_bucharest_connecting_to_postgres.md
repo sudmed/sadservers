@@ -181,7 +181,7 @@ host    replication     all             ::1/128                 md5
 
 
 #### 2. Problem seems like connection method is `reject` (even twice)
-`cat /etc/postgresql/14/main/postgresql.conf`  
+`cat /etc/postgresql/13/main/pg_hba.conf`  
 ```console
 <...>
 # Database administrative login by Unix domain socket
