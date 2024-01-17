@@ -197,8 +197,7 @@ host    all             all             all                     reject
 ```console
 # Database administrative login by Unix domain socket
 local   all             postgres                                peer
-host    all             all             all                     reject
-host    all             all             all                     reject
+host    all             all             all                     md5
 ```
 
 `systemctl restart postgresql`  
