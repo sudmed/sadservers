@@ -195,9 +195,11 @@ host    all             all             all                     reject
 #### 3. Change connection method to `md5`
 `vi /etc/postgresql/13/main/pg_hba.conf`  
 ```console
+<...>
 # Database administrative login by Unix domain socket
 local   all             postgres                                peer
 host    all             all             all                     md5
+<...>
 ```
 
 `systemctl restart postgresql`  
