@@ -58,7 +58,7 @@ Ver Cluster Port Status Owner    Data directory              Log file
 `cat /var/log/postgresql/postgresql-13-main.log`  
 <details>
 
-  <summary>cat /etc/postgresql/14/main/postgresql.conf</summary>
+  <summary>cat /var/log/postgresql/postgresql-13-main.log</summary>
 
 ```bash
 2023-11-25 17:28:56.066 UTC [9134] LOG:  starting PostgreSQL 13.13 (Debian 13.13-0+deb11u1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
@@ -132,7 +132,7 @@ hba_file = '/etc/postgresql/13/main/pg_hba.conf'        # host-based authenticat
 `cat /etc/postgresql/13/main/pg_hba.conf`  
 <details>
 
-  <summary>cat /etc/postgresql/14/main/postgresql.conf</summary>
+  <summary>cat /etc/postgresql/13/main/postgresql.conf</summary>
 
 ```bash
 # PostgreSQL Client Authentication Configuration File
