@@ -245,9 +245,35 @@ host    replication     all             ::1/128                 md5
 </details>
 
 
-#### 2. 
-
-
-``  
+#### 2. Problem seems like connection method is `reject`
+`cat /etc/postgresql/14/main/postgresql.conf`  
 ```console
+# Database administrative login by Unix domain socket
+local   all             postgres                                peer
+host    all             all             all                     reject
+host    all             all             all                     reject
+```
+
+
+#### 3. Change connection method to `md5`
+`vi /etc/postgresql/14/main/postgresql.conf`  
+```console
+# Database administrative login by Unix domain socket
+local   all             postgres                                peer
+host    all             all             all                     reject
+host    all             all             all                     reject
+```
+
+`systemctl restart postgresql`  
+
+
+#### 5. Validate the task
+`PGPASSWORD=app1user psql -h 127.0.0.1 -d app1 -U app1user -c '\q'`  
+```console
+$
+```
+
+`cd ~/agent && ./check.sh`  
+```console
+OK
 ```
