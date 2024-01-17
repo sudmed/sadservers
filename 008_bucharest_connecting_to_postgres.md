@@ -58,7 +58,7 @@ Ver Cluster Port Status Owner    Data directory              Log file
 `cat /var/log/postgresql/postgresql-13-main.log`  
 <details>
 
-  <summary>cat /var/log/postgresql/postgresql-13-main.log</summary>
+  <summary>output</summary>
 
 ```bash
 2023-11-25 17:28:56.066 UTC [9134] LOG:  starting PostgreSQL 13.13 (Debian 13.13-0+deb11u1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
@@ -132,7 +132,7 @@ hba_file = '/etc/postgresql/13/main/pg_hba.conf'        # host-based authenticat
 `cat /etc/postgresql/13/main/pg_hba.conf`  
 <details>
 
-  <summary>cat /etc/postgresql/13/main/postgresql.conf</summary>
+  <summary>output</summary>
 
 ```bash
 # PostgreSQL Client Authentication Configuration File
@@ -214,8 +214,6 @@ hba_file = '/etc/postgresql/13/main/pg_hba.conf'        # host-based authenticat
 # configuration parameter, or via the -i or -h command line switches.
 
 
-
-
 # DO NOT DISABLE!
 # If you change this first entry you will need to make sure that the
 # database superuser can access the database using some other method.
@@ -245,7 +243,7 @@ host    replication     all             ::1/128                 md5
 </details>
 
 
-#### 2. Problem seems like connection method is `reject`
+#### 2. Problem seems like connection method is `reject` (even twice)
 `cat /etc/postgresql/14/main/postgresql.conf`  
 ```console
 # Database administrative login by Unix domain socket
