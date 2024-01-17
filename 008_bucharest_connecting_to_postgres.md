@@ -55,6 +55,12 @@ Ver Cluster Port Status Owner    Data directory              Log file
 13  main    5432 online postgres /var/lib/postgresql/13/main /var/log/postgresql/postgresql-13-main.log
 ```
 
+`PGPASSWORD=app1user psql -h 127.0.0.1 -d app1 -U app1user -c '\q'`  
+```console
+psql: error: FATAL:  pg_hba.conf rejects connection for host "127.0.0.1", user "app1user", database "app1", SSL on
+FATAL:  pg_hba.conf rejects connection for host "127.0.0.1", user "app1user", database "app1", SSL off
+```
+
 `cat /var/log/postgresql/postgresql-13-main.log`  
 <details>
 
