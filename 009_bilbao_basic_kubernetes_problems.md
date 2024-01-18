@@ -304,11 +304,25 @@ Events:
 <...>
 ```
 
+`kubectl delete deploy nginx-deployment`  
+```console
+deployment.apps "nginx-deployment" deleted
+```
+
+`kubectl apply -f manifest.yml`  
+```console
+deployment.apps/nginx-deployment created
+service/nginx-service unchanged
+```
+
 `kubectl get po`  
 ```console
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-748f7447d5-bdsk5   1/1     Running   0          50s
-admin@i-04d5c03c68726d634:~$ kubectl describe pod nginx-deployment-748f7447d5-bdsk5
+```
+
+`kubectl describe pod nginx-deployment-748f7447d5-bdsk5`  
+```console
 Name:             nginx-deployment-748f7447d5-bdsk5
 Namespace:        default
 Priority:         0
