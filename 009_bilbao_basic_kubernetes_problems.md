@@ -212,11 +212,11 @@ Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists fo
 Events:
   Type     Reason            Age   From               Message
   ----     ------            ----  ----               -------
-  Warning  FailedScheduling  17h   default-scheduler  0/1 nodes are available: 1 node(s) didn't match Pod's node affinity/selector, 1 node(s) had untolerated taint {node.kubernetes.io/unreachable: }. preemption: 0/1 nodes are available: 2 Preemption is not helpful for scheduling..
+  Warning  FailedScheduling  17h   default-scheduler  0/2 nodes are available: 1 node(s) didn't match Pod's node affinity/selector, 1 node(s) had untolerated taint {node.kubernetes.io/unreachable: }. preemption: 0/2 nodes are available: 2 Preemption is not helpful for scheduling..
 ```
 
 
-#### 3. As we can see in `kubectl describe pod` command, Pod's node affinity/selector doesn't match. Let's add the missing label to the node
+#### 3. As we can see in `kubectl describe pod` command, pod's node affinity/selector doesn't match. Let's add the missing label to the node
 `kubectl label nodes node1 disk=ssd`  
 ```console
 node/node1 labeled
