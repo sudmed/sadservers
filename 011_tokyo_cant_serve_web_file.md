@@ -88,7 +88,7 @@ num   pkts bytes target     prot opt in     out     source               destina
 ```
 
 
-#### 3. As we can see there is No permission to access on index file. Lets check it
+#### 3. As we can see there is No permission error to access on index file. Let's check it
 `cd /var/www/html/ && ls -la`  
 ```console
 total 12
