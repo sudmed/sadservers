@@ -88,7 +88,7 @@ num   pkts bytes target     prot opt in     out     source               destina
 ```
 
 
-#### 3. s we can see there is No permission to access of index file. Lets check it
+#### 3. As we can see there is No permission to access on index file. Lets check it
 `cd /var/www/html/ && ls -la`  
 ```console
 total 12
@@ -98,7 +98,7 @@ drwxr-xr-x 3 root root 4096 Aug  1  2022 ..
 ```
 
 
-#### 4. Problem seems like no read permission. Let's chmod it
+#### 4. The problem is in no read permission. Let's chmod it
 `chmod +r index.html`  
 
 `ls -la`  
