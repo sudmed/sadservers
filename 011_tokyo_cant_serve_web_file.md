@@ -98,7 +98,7 @@ drwxr-xr-x 3 root root 4096 Aug  1  2022 ..
 ```
 
 
-#### 4. The problem is in no read permission. Let's chmod it
+#### 4. The problem is the absent read permission. Let's chmod it
 `chmod +r index.html`  
 
 `ls -la`  
