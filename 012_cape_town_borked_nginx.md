@@ -541,6 +541,8 @@ WantedBy=multi-user.target
 
 `systemctl daemon-reload && systemctl restart nginx`  
 
+
+#### 9. Validate the task
 `curl -I 127.0.0.1:80`  
 ```console
 HTTP/1.1 200 OK
