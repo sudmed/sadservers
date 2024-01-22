@@ -517,7 +517,7 @@ LimitNOFILE=10
 WantedBy=multi-user.target
 ```
 
-##### It seems like `LimitNOFILE=10` is too small and not enough, let's encrese up to 1024
+##### Value `LimitNOFILE=10` is too low and not enough, let's encrese up to 1024
 `vi /etc/systemd/system/nginx.service`  
 ```console
 [Unit]
