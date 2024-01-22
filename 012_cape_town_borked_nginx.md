@@ -8,6 +8,20 @@
 
 ### Solution:
 #### 1. Reconnaissance on the server
+`cd /home/admin/agent/ && cat check.sh`  
+```console
+#!/usr/bin/bash
+res=$(curl -Is 127.0.0.1:80|head -1)
+res=$(echo $res|tr -d '\r')
+
+if [[ "$res" = "HTTP/1.1 200 OK" ]]
+then
+  echo -n "OK"
+else
+  echo -n "NO"
+fi
+```
+
 `curl -I 127.0.0.1:80`  
 ```console
 curl: (7) Failed to connect to 127.0.0.1 port 80: Connection refused
@@ -29,23 +43,10 @@ Jan 22 18:52:22 i-046269c6e9bdafe29 systemd[1]: nginx.service: Failed with resul
 Jan 22 18:52:22 i-046269c6e9bdafe29 systemd[1]: Failed to start The NGINX HTTP and reverse proxy server.
 ```
 
-`cd /home/admin/agent/ && cat check.sh`  
-```console
-#!/usr/bin/bash
-res=$(curl -Is 127.0.0.1:80|head -1)
-res=$(echo $res|tr -d '\r')
-
-if [[ "$res" = "HTTP/1.1 200 OK" ]]
-then
-  echo -n "OK"
-else
-  echo -n "NO"
-fi
-```
 
 <details>
 
-  <summary>journalctl -xe</summary>
+  <summary>`journalctl -xe`</summary>
 
 ```console
 Jan 22 18:53:46 i-046269c6e9bdafe29 sudo[819]: pam_unix(sudo:session): session opened for user root(uid=0) by (uid=1000)
