@@ -116,6 +116,32 @@ Successfully tagged myapp:v1
 #### 4. Run container from image
 `docker run -d --rm -p 8888:8888 myapp:v1`  
 ```console
+feba265ecef43628e2b3cf41245f351e09fa74efc08ba57aaa50b27ba9b8a4ac
+docker: Error response from daemon: driver failed programming external connectivity on endpoint inspiring_wing (082b7a51f20ee00c58cf63b71870453b5da6fd20e51b6c1be526e4dbc32c2b5f): Error starting userland proxy: listen tcp4 0.0.0.0:8888: bind: address already in use.
+```
+
+
+#### 5. Who is occupying a port?
+`netstat -nltp`  
+```console
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      591/sshd: /usr/sbin 
+tcp        0      0 0.0.0.0:8888            0.0.0.0:*               LISTEN      617/nginx: master p 
+tcp6       0      0 :::22                   :::*                    LISTEN      591/sshd: /usr/sbin 
+tcp6       0      0 :::8888                 :::*                    LISTEN      617/nginx: master p 
+tcp6       0      0 :::6767                 :::*                    LISTEN      560/sadagent        
+tcp6       0      0 :::8080                 :::*                    LISTEN      559/gotty
+```
+
+
+#### 6. Stop NGINX
+`systemctl stop nginx`  
+
+
+#### 7. Run container once more
+`docker run -d --rm -p 8888:8888 myapp:v1`  
+```console
 20b31769c3af7d2a1ac0a9fdd9a4b63619a75803b070689b7184d6e932e452f9
 ```
 
@@ -131,7 +157,7 @@ Server Started on: 8888
 ```
 
 
-#### 5. Validate the task
+#### 8. Validate the task
 `curl localhost:8888`  
 ```console
 Hello World!
