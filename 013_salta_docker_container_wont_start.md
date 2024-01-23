@@ -122,7 +122,7 @@ Successfully tagged myapp:v1
 `docker ps`  
 ```console
 CONTAINER ID   IMAGE      COMMAND                  CREATED          STATUS          PORTS                                       NAMES
-20b31769c3af   myapp:v1   "docker-entrypoint.s…"   12 seconds ago   Up 11 seconds   0.0.0.0:8888->8880/tcp, :::8888->8880/tcp   thirsty_jang
+20b31769c3af   myapp:v1   "docker-entrypoint.s…"   12 seconds ago   Up 11 seconds   0.0.0.0:8888->8888/tcp, :::8888->8888/tcp   thirsty_jang
 ```
 
 `docker logs 20b31769c3af`  
