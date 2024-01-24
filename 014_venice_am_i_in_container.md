@@ -9,7 +9,7 @@
 
 ### Solution:
 #### 1. Check the existence of the /proc/1/cgroup file
-##### If it contains the string docker, then we are likely inside a container
+##### If it contains the string `docker`, then we are likely inside a container
 `cat /proc/1/cgroup`  
 ```console
 0::/init.scope
