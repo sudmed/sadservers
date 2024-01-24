@@ -8,14 +8,16 @@
 ---
 
 ### Solution:
-#### 1. Check the existence of the /proc/1/cgroup file. If it contains the string docker, then we are likely inside a container
+#### 1. Check the existence of the /proc/1/cgroup file
+##### If it contains the string docker, then we are likely inside a container
 `cat /proc/1/cgroup`  
 ```console
 0::/init.scope
 ```
 
 
-#### 2. Check `top` command for `dockerd` or `containerd` processes, witch indicate a container. If there are no kernel threads like [kthreadd] we are in a container, too
+#### 2. Check `top` command for `dockerd` or `containerd` processes, witch indicate a container
+##### If there are no kernel threads like [kthreadd] we are in a container too
 `top`  
 ```console
 top - 19:25:50 up 4 min,  0 users,  load average: 0.53, 0.28, 0.10
@@ -35,7 +37,8 @@ MiB Swap:      0.0 total,      0.0 free,      0.0 used.    323.8 avail Mem
 ```
 
 
-#### 3. Check `ps` command for `systemd` or `init` processes with PID=1, witch indicate a VM or host. Inside a container PID=1 has the main application
+#### 3. Check `ps` command for `systemd` or `init` processes with PID=1, witch indicate a VM or host
+##### Inside a container only the main application has PID=1
 `ps aux`  
 ```console
 USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
@@ -49,14 +52,16 @@ root         104  0.0  0.7   8652  3288 pts/0    R<+  19:28   0:00 ps aux
 ```
 
 
-#### 4. Check `docker info` command. If it runs without errors and returns information about Docker, then we are in a Docker container
+#### 4. Check `docker info` command
+##### If it runs without errors and returns information about Docker, then we are in a Docker container
 `docker info`  
 ```console
 bash: docker: command not found
 ```
 
 
-#### 5. Check `lscpu` command. If we see tags indicating virtualization, such as "vmx" for Intel VT-x or "svm" for AMD-V, then we are in a virtual machine
+#### 5. Check `lscpu` command
+##### If we see tags indicating virtualization, such as "vmx" for Intel VT-x or "svm" for AMD-V, then we are in a virtual machine
 `lscpu`  
 ```console
 Architecture:                    x86_64
@@ -68,7 +73,8 @@ Virtualization type:             full
 ```
 
 
-#### 6. Check `mount` command. In a container, the file system is usually mounted using "overlay" or "aufs". If we see the results, we are in a container
+#### 6. Check `mount` command
+##### In a container, the file system is usually mounted using "overlay" or "aufs". If we see the results, we are in a container
 `mount | grep overlay`  
 ```console
 overlay on / type overlay (rw,relatime,lowerdir=/var/lib/containers/storage/overlay/l/4UGO27476EXYY2UQSGBWL6EZC4:/var/lib/containers/storage/overlay/l/3JZQV4UY3FCO3W7SL3ERYENEZN:/var/lib/containers/storage/overlay/l/SCP4AZOKFN5HY4R5CQ5UVOYS7K:/var/lib/containers/storage/overlay/l/LPA46WOYFQ5ZHRJPEGNEEUCN36:/var/lib/containers/storage/overlay/l/WYTOBRCWJIZJALTLB3T5GBAQAB,upperdir=/var/lib/containers/storage/overlay/97d89e3f7cc7178dcfd77caeabf3350a092c5edad5ec553bf2ca84956755065f/diff,workdir=/var/lib/containers/storage/overlay/97d89e3f7cc7178dcfd77caeabf3350a092c5edad5ec553bf2ca84956755065f/work)
@@ -80,14 +86,16 @@ overlay on / type overlay (rw,relatime,lowerdir=/var/lib/containers/storage/over
 ```
 
 
-#### 7. Chech environment variables with `env` command. If we see Docker-related variables (such as DOCKER_HOST, DOCKER_CONTAINER, DOCKER_VERSION etc.) we are in a Docker container
+#### 7. Chech environment variables with `env` command
+##### If we see Docker-related variables (such as DOCKER_HOST, DOCKER_CONTAINER, DOCKER_VERSION etc.) we are in a Docker container
 `env | grep -E "(DOCKER_HOST|DOCKER_CONTAINER|DOCKER_VERSION)"`  
 ```console
 <no output>
 ```
 
 
-#### 8. Check network interfaces with `ip a` or `ifconfig` command. In a Docker container, some network interface is usually prefixed with `docker0`
+#### 8. Check network interfaces with `ip a` or `ifconfig` command
+##### In a Docker container, some network interface is usually prefixed with `docker0`
 `ifconfig`  
 ```console
 docker0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
@@ -118,7 +126,8 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 ```
 
 
-#### 9. Check `lsns` command to get a list of namespaces. If we see namespaces like `mht`, `pid`, `ipc`, `net`, then this is a Docker container. If we see other namespaces such as `dm`, `vz`, `lxc`, `veth`, this may indicate the presence of a virtual machine
+#### 9. Check `lsns` command to get a list of namespaces
+##### If we see namespaces like `mht`, `pid`, `ipc`, `net`, then this is a Docker container. If we see other namespaces such as `dm`, `vz`, `lxc`, `veth`, this may indicate the presence of a virtual machine
 `lsns`  
 ```console
         NS TYPE   NPROCS PID USER COMMAND
