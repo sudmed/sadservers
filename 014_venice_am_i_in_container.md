@@ -135,7 +135,8 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 ```
 
 
-#### 10. SOLUTION: A way of checking is by looking at the environment of the PID=1 process and see if there's a container variable like `container=podman`. But its value is changed for fun
+#### 10. AUTHOR'S SOLUTION
+##### A way of checking is by looking at the environment of the PID=1 process and see if there's a container variable like `container=podman`. But its value is changed for fun
 `cat /proc/1/environ|tr "\0" "\n"|grep container`  
 ```console
 container=youlooked
