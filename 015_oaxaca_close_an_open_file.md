@@ -32,6 +32,11 @@ drwxr-xr-x 2 admin admin 4096 Nov 30  2022 agent
 exec 66> /home/admin/somefile
 ```
 
+`lsof -p $(pgrep -d ',' "") | grep 66`
+```console
+systemd     1       root   66u     unix 0x0000000062e86ce1      0t0      11474 /run/systemd/journal/stdout type=STREAM`  
+```
+
 `cd ~/agent && cat check.sh `  
 ```console
 #!/usr/bin/bash
@@ -52,11 +57,6 @@ fi
 ```console
 COMMAND PID  USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
 bash    806 admin   77w   REG  259,1        0 272875 /home/admin/somefile
-```
-
-`lsof -p $(pgrep -d ',' "") | grep 66`
-```console
-systemd     1       root   66u     unix 0x0000000062e86ce1      0t0      11474 /run/systemd/journal/stdout type=STREAM`  
 ```
 
 
