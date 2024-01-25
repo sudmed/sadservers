@@ -54,6 +54,11 @@ COMMAND PID  USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
 bash    806 admin   77w   REG  259,1        0 272875 /home/admin/somefile
 ```
 
+`lsof -p $(pgrep -d ',' "") | grep 66`
+```console
+systemd     1       root   66u     unix 0x0000000062e86ce1      0t0      11474 /run/systemd/journal/stdout type=STREAM`  
+```
+
 
 #### 3. Close the file descriptor 77
 `eval "exec 77>&-"`  
