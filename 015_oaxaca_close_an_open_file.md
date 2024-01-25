@@ -56,7 +56,7 @@ bash    806 admin   77w   REG  259,1        0 272875 /home/admin/somefile
 
 
 #### 3. Close the file descriptor 77
-`eval "exec 77&-"`  
+`eval "exec 77>&-"`  
 ```console
 <no output>
 ```
