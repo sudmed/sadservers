@@ -86,7 +86,7 @@ Jan 25 20:02:21 i-03a8f571125757354 gunicorn[679]: [2024-01-25 20:02:21 +0000] [
        Docs: man:nginx(8)
 ```
 
-### NGINX service is down
+### NGINX service is down!
 
 
 #### 2. Start NGINX daemon
