@@ -86,7 +86,7 @@ Jan 25 20:02:21 i-03a8f571125757354 gunicorn[679]: [2024-01-25 20:02:21 +0000] [
        Docs: man:nginx(8)
 ```
 
-### NGINX service is down!
+#### NGINX service is down!
 
 
 #### 2. Start NGINX daemon
@@ -216,6 +216,7 @@ Connection: close
 Content-Type: text/html
 Content-Length: 0
 ```
+#### The `Content-Length` value is `0`, that's why the response body is empty!
 
 
 #### 6. Let's check Gunicorn files
@@ -225,8 +226,6 @@ def application(environ, start_response):
     start_response('200 OK', [('Content-Type', 'text/html'), ('Content-Length', '0'), ])
     return [b'Hello, world!']
 ```
-
-### The `Content-Length` value is `0`, that's why the response body is empty
 
 
 #### 7. Encrease the value of `Content-Length`
