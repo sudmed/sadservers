@@ -458,7 +458,7 @@ subject=C = RU, ST = Moscow, L = Moscow, O = OOO ROGA & KOPYTA, OU = DEVOPS DEP,
 Getting Private key
 ```
 
-##### 9.2. Check new certificates
+##### 9.2. Check new certificates and fix permissions
 `ls -la`  
 ```console
 total 48
@@ -476,7 +476,7 @@ drwx------  2 root root 4096 Aug 31  2022 .ssh
 -rw-------  1 root root 1675 Jan 27 12:11 cert.key
 ```
 
-`chmod o+x cert.key`  
+`chmod a+r cert.key`  
 `ls -la`  
 ```console
 total 48
@@ -491,7 +491,7 @@ drwxr-xr-x  3 root root 4096 Aug 31  2022 .local
 drwx------  2 root root 4096 Aug 31  2022 .ssh
 -rw-r--r--  1 root root 1338 Jan 27 12:13 cert.crt
 -rw-r--r--  1 root root 1066 Jan 27 12:13 cert.csr
--rw------x  1 root root 1675 Jan 27 12:11 cert.key
+-rw-r--r--  1 root root 1675 Jan 27 12:11 cert.key
 ```
 
 
