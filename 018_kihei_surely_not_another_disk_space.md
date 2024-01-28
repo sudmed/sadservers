@@ -555,7 +555,7 @@ nvme1n1      259:5    0    1G  0 disk
 
 #### 3. Mount new logical disk and make owned by admin
 `sudo mount /dev/vg01/lv01 /home/admin/data`  
-`sudo chown -R admin: /home/admin/data`  
+`sudo chown -R admin:admin /home/admin/data`  
 
 
 
