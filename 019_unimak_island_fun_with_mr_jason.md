@@ -187,7 +187,7 @@ fi
 ```
 
 
-#### 6. Set 'station_id' to file
+#### 6. Save 'station_id' to file
 `cat notkiosk.capacity.json | jq '.station_id' | tr -d '"' > /home/admin/mysolution`  
 `cat /home/admin/mysolution`  
 ```console
@@ -210,4 +210,6 @@ OK
 ---
 
 #### AUTHOR'S SOLUTION
-`jq '.data.stations[] | select(.has_kiosk==false and .capacity>30) | .station_id' station_information.json`  
+```bash
+jq '.data.stations[] | select(.has_kiosk==false and .capacity>30) | .station_id' station_information.json
+```
