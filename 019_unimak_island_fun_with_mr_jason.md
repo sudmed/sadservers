@@ -28,7 +28,7 @@ drwxr-xr-x 2 admin root     4096 Sep 26 21:49 agent
 ```
 
 `cat agent/check.sh `  
-```console
+```bash
 #!/usr/bin/bash
 res=$(md5sum /home/admin/mysolution |awk '{print $1}')
 res=$(echo $res|tr -d '\r')
@@ -42,7 +42,7 @@ fi
 ```
 
 `cat station_information.json | jq | head -n 50`  
-```console
+```json
 {
   "data": {
     "stations": [
@@ -99,7 +99,7 @@ fi
 #### 2. Sort objects
 `cat station_information.json | jq -S --indent 2 > stasorted.json`  
 `head -n 20 stasorted.json`  
-```console
+```json
 {
   "data": {
     "stations": [
@@ -126,7 +126,7 @@ fi
 #### 3. Filter for `data` field
 `cat stasorted.json | jq '.data.stations' > data.stations.json`  
 `head -n 20 data.stations.json`  
-```console
+```json
 [
   {
     "capacity": 3,
@@ -209,5 +209,5 @@ OK
 
 ---
 
-### AUTHOR'S SOLUTION
+#### AUTHOR'S SOLUTION
 `jq '.data.stations[] | select(.has_kiosk==false and .capacity>30) | .station_id' station_information.json`  
