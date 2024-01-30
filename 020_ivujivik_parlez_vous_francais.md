@@ -277,7 +277,10 @@ SQLite version 3.34.1 2021-01-20 14:10:07
 Enter ".help" for usage hints.
 Connected to a transient in-memory database.
 Use ".open FILENAME" to reopen on a persistent database.
-sqlite> .import --csv /home/admin/table_tableau11.csv elect
+```
+
+`sqlite> .import --csv /home/admin/table_tableau11.csv elect`  
+```console
 /home/admin/table_tableau11.csv:101: expected 13 columns but found 12 - filling the rest with NULL
 sqlite>
 ```
