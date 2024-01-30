@@ -282,7 +282,7 @@ sqlite> .import --csv /home/admin/table_tableau11.csv elect
 sqlite>
 ```
 
-##### Error in line 101
+##### Error in line 101: there are fewer columns than necessary, apparently a comma is missing
 `nano +101 table_tableau11.csv`  
 ```console
 "Quebec/Québec""Saint-Léonard--Saint-Michel",24069,110649,76746,205,44531,98.5,689,1.5,45220,58.9,"Di Iorio, Nicola Liberal/Libéral"
@@ -294,11 +294,8 @@ sqlite>
 "Quebec/Québec","Saint-Léonard--Saint-Michel",24069,110649,76746,205,44531,98.5,689,1.5,45220,58.9,"Di Iorio, Nicola Liberal/Libéral"
 ```
 
-
-#### III. Try importing again
+#### III. Try importing again and show the schema
 `sqlite> .import --csv /home/admin/table_tableau11.csv elect`  
-
-##### We have a table with the data but the numbers are represented as text. We can see it in the schema with .schema command
 `sqlite> .schema elect`  
 ```console
 CREATE TABLE IF NOT EXISTS "elect"(
@@ -317,6 +314,8 @@ CREATE TABLE IF NOT EXISTS "elect"(
   "Elected Candidate/Candidat élu" TEXT
 );
 ```
+
+##### We have a table with the data but the numbers are represented as text. But we can copy the schema output and change "Population" and "Rejected Ballots/Bulletins rejetés" from TEXT to INTEGER
 
 #### IV. Recreate the table with INTEGER fields
 ```console
@@ -342,7 +341,7 @@ sqlite> CREATE TABLE IF NOT EXISTS "elections"(
 sqlite> .import --csv /home/admin/table_tableau11.csv elections
 ```
 
-#### VI. Select needed values
+#### VI. Select needed value now
 `sqlite> select "Electoral District Name/Nom de circonscription" from elections where "Population" < 100000 order by "Rejected Ballots/Bulletins rejetés" desc limit 1;`  
 ```console
 Montcalm
