@@ -318,7 +318,7 @@ CREATE TABLE IF NOT EXISTS "elect"(
 );
 ```
 
-##### We have a table with the data but the numbers are represented as text. But we can copy the schema output and change "Population" and "Rejected Ballots/Bulletins rejetés" from TEXT to INTEGER
+##### We have a table with the data but the numbers are represented as text. We can copy the schema output and change "Population" and "Rejected Ballots/Bulletins rejetés" from TEXT to INTEGER
 
 #### IV. Recreate the table with INTEGER fields
 ```console
