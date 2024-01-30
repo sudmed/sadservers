@@ -59,7 +59,7 @@ Province,Electoral District Name/Nom de circonscription,Electoral District Numbe
 ```
 
 
-#### 2. Use [mlr](https://miller.readthedocs.io/en/latest/10min/) (Miller)
+#### 2. Use [mlr](https://miller.readthedocs.io/en/latest/10min/) utility (miller)
 ##### Miller is a command-line tool for querying, shaping, and reformatting data files in various formats including CSV, TSV, JSON, and JSON Lines
 
 ##### 2.1. Print our csv file
@@ -270,3 +270,80 @@ OK
 ---
 
 ### AUTHOR'S SOLUTION
+#### I. Import csv to sqlite3
+`sqlite3`  
+```console
+SQLite version 3.34.1 2021-01-20 14:10:07
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> .import --csv /home/admin/table_tableau11.csv elect
+/home/admin/table_tableau11.csv:101: expected 13 columns but found 12 - filling the rest with NULL
+sqlite>
+```
+
+##### Error in line 101
+`nano +101 table_tableau11.csv`  
+```console
+"Quebec/Québec""Saint-Léonard--Saint-Michel",24069,110649,76746,205,44531,98.5,689,1.5,45220,58.9,"Di Iorio, Nicola Liberal/Libéral"
+```
+
+#### II. Add missing comma between 1st and 2nd columns
+`nano +101 table_tableau11.csv`  
+```console
+"Quebec/Québec","Saint-Léonard--Saint-Michel",24069,110649,76746,205,44531,98.5,689,1.5,45220,58.9,"Di Iorio, Nicola Liberal/Libéral"
+```
+
+
+#### III. Try importing again
+`sqlite> .import --csv /home/admin/table_tableau11.csv elect`  
+
+##### We have a table with the data but the numbers are represented as text. We can see it in the schema with .schema command
+`sqlite> .schema elect`  
+```console
+CREATE TABLE IF NOT EXISTS "elect"(
+  "Province" TEXT,
+  "Electoral District Name/Nom de circonscription" TEXT,
+  "Electoral District Number/Numéro de circonscription" TEXT,
+  "Population" TEXT,
+  "Electors/Électeurs" TEXT,
+  "Polling Stations/Bureaux de scrutin" TEXT,
+  "Valid Ballots/Bulletins valides" TEXT,
+  "Percentage of Valid Ballots /Pourcentage des bulletins valides" TEXT,
+  "Rejected Ballots/Bulletins rejetés" TEXT,
+  "Percentage of Rejected Ballots /Pourcentage des bulletins rejetés" TEXT,
+  "Total Ballots Cast/Total des bulletins déposés" TEXT,
+  "Percentage of Voter Turnout/Pourcentage de la participation électorale" TEXT,
+  "Elected Candidate/Candidat élu" TEXT
+);
+```
+
+#### IV. Recreate the table with INTEGER fields
+```console
+sqlite> CREATE TABLE IF NOT EXISTS "elections"(
+  "Province" TEXT,
+  "Electoral District Name/Nom de circonscription" TEXT,
+  "Electoral District Number/Numéro de circonscription" TEXT,
+  "Population" INTEGER,
+  "Electors/Électeurs" TEXT,
+  "Polling Stations/Bureaux de scrutin" TEXT,
+  "Valid Ballots/Bulletins valides" TEXT,
+  "Percentage of Valid Ballots /Pourcentage des bulletins valides" TEXT,
+  "Rejected Ballots/Bulletins rejetés" INTEGER,
+  "Percentage of Rejected Ballots /Pourcentage des bulletins rejetés" TEXT,
+  "Total Ballots Cast/Total des bulletins déposés" TEXT,
+  "Percentage of Voter Turnout/Pourcentage de la participation électorale" TEXT,
+  "Elected Candidate/Candidat élu" TEXT
+);
+```
+
+#### V. Try importing once more
+```console
+sqlite> .import --csv /home/admin/table_tableau11.csv elections
+```
+
+#### VI. Select needed values
+`sqlite> select "Electoral District Name/Nom de circonscription" from elections where "Population" < 100000 order by "Rejected Ballots/Bulletins rejetés" desc limit 1;`  
+```console
+Montcalm
+```
