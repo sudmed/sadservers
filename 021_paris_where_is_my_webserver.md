@@ -193,4 +193,5 @@ OK
 ---
 
 ### AUTHOR'S SOLUTION
+The user agent of the client you are using against the web server may play a role here.  
 Use telnet or netcat: `nc localhost 5000` then `GET /` and Enter twice or using curl you can change the user agent: `curl --user-agent "whatever" localhost:5000`  
