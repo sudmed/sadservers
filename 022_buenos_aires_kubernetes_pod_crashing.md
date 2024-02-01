@@ -356,7 +356,9 @@ rules:
   - list
 ```
 
-``kubectl edit ClusterRole logshipper-cluster-role`    
+
+#### 2. AUTHOR'S SOLUTION
+`kubectl edit ClusterRole logshipper-cluster-role`    
 ```console
 # Please edit the object below. Lines beginning with a '#' will be ignored,
 # and an empty file will abort the edit. If an error occurs while saving this file will be
@@ -395,7 +397,7 @@ deployment.apps/logshipper restarted
 ```
 
 
-#### 2. Validate the task
+#### 3. Validate the task
 `cd /home/admin/agent/ && ./check.sh`  
 ```console
 OK
