@@ -399,6 +399,13 @@ clusterrole.rbac.authorization.k8s.io/logshipper-cluster-role edited
 deployment.apps/logshipper restarted
 ```
 
+`kubectl get po`  
+```console
+NAME                         READY   STATUS    RESTARTS        AGE
+logger-574bd75fd9-wpg4w      1/1     Running   5 (23s ago)     101d
+logshipper-7d97c8659-npscd   1/1     Running   20 (101d ago)   101d
+```
+
 
 #### 3. Validate the task
 `cd /home/admin/agent/ && ./check.sh`  
