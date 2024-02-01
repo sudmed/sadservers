@@ -359,8 +359,8 @@ rules:
 
 ### 2. AUTHOR'S SOLUTION
 ##### Edit the `logshipper-cluster-role` role (include the `get` and `watch` verbs) and restart the `logshipper` pod
+#### 2.1. Edit the role
 `kubectl edit ClusterRole logshipper-cluster-role`    
-#### 2.1 
 ```console
 # Please edit the object below. Lines beginning with a '#' will be ignored,
 # and an empty file will abort the edit. If an error occurs while saving this file will be
@@ -393,7 +393,7 @@ rules:
 clusterrole.rbac.authorization.k8s.io/logshipper-cluster-role edited
 ```
 
-#### 2.2
+#### 2.2. Restart the pod
 `kubectl rollout restart deployment logshipper`  
 ```console
 deployment.apps/logshipper restarted
