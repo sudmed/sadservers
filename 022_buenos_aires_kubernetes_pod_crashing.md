@@ -357,7 +357,8 @@ rules:
 ```
 
 
-#### 2. AUTHOR'S SOLUTION
+### 2. AUTHOR'S SOLUTION
+##### Edit the `logshipper-cluster-role` role (include the `get` and `watch` verbs) and restart the `logshipper` pod
 `kubectl edit ClusterRole logshipper-cluster-role`    
 ```console
 # Please edit the object below. Lines beginning with a '#' will be ignored,
