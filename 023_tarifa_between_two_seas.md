@@ -117,8 +117,7 @@ backend nginx_backends
     server nginx_0 nginx_0:80 check
     server nginx_1 nginx_1:80 check
 ```
-↑
-#####  As we can see, roundrobin is made between two identical ports (80).
+#####  ↑ As we can see, roundrobin is made between two identical ports (80).
 
 
 `cat docker-compose.yml`  
@@ -166,8 +165,7 @@ networks:
   backend_network:
     driver: bridge
 ```
-
-##### As we can see, 3 services use 2 networks.
+##### ↑ As we can see, 3 services use 2 different networks.
 
 
 `cat custom-nginx_0.conf`  
@@ -197,8 +195,7 @@ server {
     }
 }
 ```
-
-##### OK, one mistake is found now, ports must be 80 and 81.
+##### ↑ OK, one error has been detected, the listening port of one of the nginx servers is 81.
 
 
 `docker ps`  
@@ -209,13 +206,11 @@ c79c9eb25143   haproxy:2.8.4   "docker-entrypoint.s…"   2 months ago   Up 6 mi
 2624cd20f3c4   nginx:1.25.3    "/docker-entrypoint.…"   2 months ago   Up 6 minutes   80/tcp                                      nginx_0
 ```
 
-`curl localhost:5000`  
+`curl localhost:5000` `(several times)`  
 ```console
 hello there from nginx_0
-```
-
-`curl localhost:5000`  
-```console
+hello there from nginx_0
+hello there from nginx_0
 hello there from nginx_0
 ```
 
