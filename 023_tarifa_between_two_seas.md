@@ -117,7 +117,8 @@ backend nginx_backends
     server nginx_0 nginx_0:80 check
     server nginx_1 nginx_1:80 check
 ```
-#####  As we can see, roundrobin is made with two same ports 80.
+↑
+#####  As we can see, roundrobin is made between two identical ports (80).
 
 
 `cat docker-compose.yml`  
