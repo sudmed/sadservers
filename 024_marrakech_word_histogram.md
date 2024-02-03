@@ -7833,6 +7833,7 @@ AND
 #### 4. Create a short script for small-scale mechanization
 `vi script.sh`  
 ```bash
+#! /bin/bash
 input_file="frankestein.txt"
 output_file="/home/admin/mysolution"
 
