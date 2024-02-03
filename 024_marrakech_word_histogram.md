@@ -61,10 +61,121 @@ This cannot be overstated. It's impossible to know these things.
 
   <summary>cat frankestein.txt</summary>
 
-```bash
-# -----------------------------
-# PostgreSQL configuration file
-# -----------------------------
+```text
+The Project Gutenberg eBook of Frankenstein, by Mary Wollstonecraft Shelley
+
+This eBook is for the use of anyone anywhere in the United States and
+most other parts of the world at no cost and with almost no restrictions
+whatsoever. You may copy it, give it away or re-use it under the terms
+of the Project Gutenberg License included with this eBook or online at
+www.gutenberg.org. If you are not located in the United States, you
+will have to check the laws of the country where you are located before
+using this eBook.
+
+Title: Frankenstein
+       or, The Modern Prometheus
+
+Author: Mary Wollstonecraft Shelley
+
+Release Date: October 31, 1993 [eBook #84]
+[Most recently updated: December 2, 2022]
+
+Language: English
+
+Character set encoding: UTF-8
+
+Produced by: Judith Boss, Christy Phillips, Lynn Hanninen and David Meltzer. HTML version by Al Haines.
+Further corrections by Menno de Leeuw.
+
+*** START OF THE PROJECT GUTENBERG EBOOK FRANKENSTEIN ***
+
+
+
+
+Frankenstein;
+
+or, the Modern Prometheus
+
+by Mary Wollstonecraft (Godwin) Shelley
+
+
+ CONTENTS
+
+ Letter 1
+ Letter 2
+ Letter 3
+ Letter 4
+ Chapter 1
+ Chapter 2
+ Chapter 3
+ Chapter 4
+ Chapter 5
+ Chapter 6
+ Chapter 7
+ Chapter 8
+ Chapter 9
+ Chapter 10
+ Chapter 11
+ Chapter 12
+ Chapter 13
+ Chapter 14
+ Chapter 15
+ Chapter 16
+ Chapter 17
+ Chapter 18
+ Chapter 19
+ Chapter 20
+ Chapter 21
+ Chapter 22
+ Chapter 23
+ Chapter 24
 ```
 
 </details>
+
+
+#### 2. Try on the second text
+`cat test.txt | tr '[:upper:]' '[:lower:]' | tr -s '[:punct:]' ' ' | tr ' ' '\n' | grep -v '^$' | sort | uniq -c | sort -nr | awk 'NR==2{print toupper($2)}'`  
+```console
+WORLD
+```
+##### Fine, it works.
+
+
+#### 3. 
+`cat frankestein.txt | tr '[:upper:]' '[:lower:]' | tr -s '[:punct:]' ' ' | tr ' ' '\n' | grep -v '^$' | sort | uniq -c | sort -nr | awk 'NR==2{print toupper($2)}'`  
+```console
+AND
+```
+
+`echo "AND" | md5sum`  
+```console
+19bf32b8725ec794d434280902d78e18  -
+```
+##### Fine, it works.
+
+
+#### 4. Create some script
+`vi script.sh`  
+```bash
+input_file="frankestein.txt"
+output_file="/home/admin/mysolution"
+
+# Используем команды grep, tr, sort, uniq и awk для обработки файла
+# сначала преобразуем текст в нижний регистр и разделим на слова,
+# затем находим частоту каждого слова, сортируем их и извлекаем второе слово
+# наконец, преобразуем его в верхний регистр и записываем в файл
+
+cat $input_file | tr '[:upper:]' '[:lower:]' | tr -s '[:punct:]' ' ' | tr ' ' '\n' | grep -v '^$' | sort | uniq -c | sort -nr | awk 'NR==2{print toupper($2)}' > $output_file
+```
+`chmod +x script.sh`  
+`./script.sh`  
+
+
+
+#### 5. Validate the task
+`./home/admin/agent/check.sh`  
+```console
+OK
+```
+
