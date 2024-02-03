@@ -7809,7 +7809,7 @@ subscribe to our email newsletter to hear about new eBooks.
 </details>
 
 
-#### 2. Try on the second text
+#### 2. Try on a small text
 `cat test.txt | tr '[:upper:]' '[:lower:]' | tr -s '[:punct:]' ' ' | tr ' ' '\n' | grep -v '^$' | sort | uniq -c | sort -nr | awk 'NR==2{print toupper($2)}'`  
 ```console
 WORLD
@@ -7817,7 +7817,7 @@ WORLD
 ##### Fine, it works.
 
 
-#### 3. 
+#### 3. Try on the main text
 `cat frankestein.txt | tr '[:upper:]' '[:lower:]' | tr -s '[:punct:]' ' ' | tr ' ' '\n' | grep -v '^$' | sort | uniq -c | sort -nr | awk 'NR==2{print toupper($2)}'`  
 ```console
 AND
@@ -7830,7 +7830,7 @@ AND
 ##### Fine, it works.
 
 
-#### 4. Create some script
+#### 4. Create a short script for small-scale mechanization
 `vi script.sh`  
 ```bash
 input_file="frankestein.txt"
