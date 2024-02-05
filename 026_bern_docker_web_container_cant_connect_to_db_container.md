@@ -977,10 +977,19 @@ MariaDB [wordpress]> SELECT user FROM mysql.user;
 MariaDB [(none)]>
 ```
 
+`docker exec mariadb mysqladmin -h localhost -u root -ppassword ping`  
+```console
+mysqld is alive
+```
 ##### All seems like OK, except for the absence of network connectivity between two docker containers. In order to solve this issue, we will use a Docker Compose.
 
 
 #### 2. Create docker-compose.yaml
+`docker-compose -v`  
+```console
+docker-compose version 1.25.0, build unknown
+```
+
 `vi /home/admin/docker-compose.yaml`  
 ```console
 version: "3"
