@@ -252,10 +252,871 @@ require_once ABSPATH . 'wp-settings.php';
 
 </details>
 
+
+<details>
+
+  <summary>cat wp-config.php</summary>
+
+```console
+<?php
+/**
+ * The base configuration for WordPress
+ *
+ * The wp-config.php creation script uses this file during the installation.
+ * You don't have to use the web site, you can copy this file to "wp-config.php"
+ * and fill in the values.
+ *
+ * This file contains the following configurations:
+ *
+ * * Database settings
+ * * Secret keys
+ * * Database table prefix
+ * * ABSPATH
+ *
+ * This has been slightly modified (to read environment variables) for use in Docker.
+ *
+ * @link https://wordpress.org/support/article/editing-wp-config-php/
+ *
+ * @package WordPress
+ */
+
+// IMPORTANT: this file needs to stay in-sync with https://github.com/WordPress/WordPress/blob/master/wp-config-sample.php
+// (it gets parsed by the upstream wizard in https://github.com/WordPress/WordPress/blob/f27cb65e1ef25d11b535695a660e7282b98eb742/wp-admin/setup-config.php#L356-L392)
+
+// a helper function to lookup "env_FILE", "env", then fallback
+if (!function_exists('getenv_docker')) {
+        // https://github.com/docker-library/wordpress/issues/588 (WP-CLI will load this file 2x)
+        function getenv_docker($env, $default) {
+                if ($fileEnv = getenv($env . '_FILE')) {
+                        return rtrim(file_get_contents($fileEnv), "\r\n");
+                }
+                else if (($val = getenv($env)) !== false) {
+                        return $val;
+                }
+                else {
+                        return $default;
+                }
+        }
+}
+
+// ** Database settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define( 'DB_NAME', getenv_docker('WORDPRESS_DB_NAME', 'wordpress') );
+
+/** Database username */
+define( 'DB_USER', getenv_docker('WORDPRESS_DB_USER', 'example username') );
+
+/** Database password */
+define( 'DB_PASSWORD', getenv_docker('WORDPRESS_DB_PASSWORD', 'example password') );
+
+/**
+ * Docker image fallback values above are sourced from the official WordPress installation wizard:
+ * https://github.com/WordPress/WordPress/blob/f9cc35ebad82753e9c86de322ea5c76a9001c7e2/wp-admin/setup-config.php#L216-L230
+ * (However, using "example username" and "example password" in your database is strongly discouraged.  Please use strong, random credentials!)
+ */
+
+/** Database hostname */
+define( 'DB_HOST', getenv_docker('WORDPRESS_DB_HOST', 'mysql') );
+
+/** Database charset to use in creating database tables. */
+define( 'DB_CHARSET', getenv_docker('WORDPRESS_DB_CHARSET', 'utf8') );
+
+/** The database collate type. Don't change this if in doubt. */
+define( 'DB_COLLATE', getenv_docker('WORDPRESS_DB_COLLATE', '') );
+
+/**#@+
+ * Authentication unique keys and salts.
+ *
+ * Change these to different unique phrases! You can generate these using
+ * the {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}.
+ *
+ * You can change these at any point in time to invalidate all existing cookies.
+ * This will force all users to have to log in again.
+ *
+ * @since 2.6.0
+ */
+define( 'AUTH_KEY',         getenv_docker('WORDPRESS_AUTH_KEY',         'f0aaec96742ffd7b3138d2ce83109300edade9dc') );
+define( 'SECURE_AUTH_KEY',  getenv_docker('WORDPRESS_SECURE_AUTH_KEY',  '1b8a6ca8d1cd4611e4344033fa09d73a28091c91') );
+define( 'LOGGED_IN_KEY',    getenv_docker('WORDPRESS_LOGGED_IN_KEY',    '39833cadd07e80d957900c7fdef747496e511a5b') );
+define( 'NONCE_KEY',        getenv_docker('WORDPRESS_NONCE_KEY',        '6822f1a5db0ca8707aac3989f66bbd06495d6444') );
+define( 'AUTH_SALT',        getenv_docker('WORDPRESS_AUTH_SALT',        '808d83faac6c11dcfe31adc04ddefb371e78d1be') );
+define( 'SECURE_AUTH_SALT', getenv_docker('WORDPRESS_SECURE_AUTH_SALT', '25260f4796475b2b2c27271b4f24fc2dbd7e59d2') );
+define( 'LOGGED_IN_SALT',   getenv_docker('WORDPRESS_LOGGED_IN_SALT',   '0346970f61cf1c1cc7bfee9e35327c1b73b42ae9') );
+define( 'NONCE_SALT',       getenv_docker('WORDPRESS_NONCE_SALT',       '4953ca4ac37e0291db240e93fcd0d2b59dd61d16') );
+// (See also https://wordpress.stackexchange.com/a/152905/199287)
+
+/**#@-*/
+
+/**
+ * WordPress database table prefix.
+ *
+ * You can have multiple installations in one database if you give each
+ * a unique prefix. Only numbers, letters, and underscores please!
+ */
+$table_prefix = getenv_docker('WORDPRESS_TABLE_PREFIX', 'wp_');
+
+/**
+ * For developers: WordPress debugging mode.
+ *
+ * Change this to true to enable the display of notices during development.
+ * It is strongly recommended that plugin and theme developers use WP_DEBUG
+ * in their development environments.
+ *
+ * For information on other constants that can be used for debugging,
+ * visit the documentation.
+ *
+ * @link https://wordpress.org/support/article/debugging-in-wordpress/
+ */
+define( 'WP_DEBUG', !!getenv_docker('WORDPRESS_DEBUG', '') );
+
+/* Add any custom values between this line and the "stop editing" line. */
+
+// If we're behind a proxy server and using HTTPS, we need to alert WordPress of that fact
+// see also https://wordpress.org/support/article/administration-over-ssl/#using-a-reverse-proxy
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strpos($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false) {
+        $_SERVER['HTTPS'] = 'on';
+}
+// (we include this by default because reverse proxying is extremely common in container environments)
+
+if ($configExtra = getenv_docker('WORDPRESS_CONFIG_EXTRA', '')) {
+        eval($configExtra);
+}
+
+/* That's all, stop editing! Happy publishing. */
+
+/** Absolute path to the WordPress directory. */
+if ( ! defined( 'ABSPATH' ) ) {
+        define( 'ABSPATH', __DIR__ . '/' );
+}
+
+/** Sets up WordPress vars and included files. */
+require_once ABSPATH . 'wp-settings.php';
+root@6ffb084b515c:/var/www/html#
+```
+
+</details>
+
+
 `sudo docker ps`  
 ```console
 CONTAINER ID   IMAGE            COMMAND                  CREATED         STATUS         PORTS                    NAMES
 6ffb084b515c   wordpress:sad    "docker-entrypoint.s…"   18 months ago   Up 4 minutes   0.0.0.0:80->80/tcp       wordpress
 0eef97284c44   mariadb:latest   "docker-entrypoint.s…"   18 months ago   Up 4 minutes   0.0.0.0:3306->3306/tcp   mariadb
+```
+
+
+<details>
+
+  <summary>sudo docker logs 0eef97284c4</summary>
+
+```console
+2022-08-04 03:22:33+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.8.3+maria~jammy started.
+2022-08-04 03:22:34+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2022-08-04 03:22:34+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.8.3+maria~jammy started.
+2022-08-04 03:22:34+00:00 [Note] [Entrypoint]: MariaDB upgrade not required
+2022-08-04  3:22:34 0 [Note] mariadbd (server 10.8.3-MariaDB-1:10.8.3+maria~jammy) starting as process 1 ...
+2022-08-04  3:22:34 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
+2022-08-04  3:22:34 0 [Note] InnoDB: Number of transaction pools: 1
+2022-08-04  3:22:34 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
+2022-08-04  3:22:34 0 [Note] mariadbd: O_TMPFILE is not supported on /tmp (disabling future attempts)
+2022-08-04  3:22:34 0 [Warning] mariadbd: io_uring_queue_init() failed with ENOMEM: try larger memory locked limit, ulimit -l, or https://mariadb.com/kb/en/systemd/#configuring-limitmemlock under systemd (262144 bytes required)
+2022-08-04  3:22:34 0 [Warning] InnoDB: liburing disabled: falling back to innodb_use_native_aio=OFF
+2022-08-04  3:22:34 0 [Note] InnoDB: Initializing buffer pool, total size = 128.000MiB, chunk size = 2.000MiB
+2022-08-04  3:22:34 0 [Note] InnoDB: Completed initialization of buffer pool
+2022-08-04  3:22:34 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
+2022-08-04  3:22:34 0 [Note] InnoDB: 128 rollback segments are active.
+2022-08-04  3:22:34 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2022-08-04  3:22:34 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2022-08-04  3:22:34 0 [Note] InnoDB: log sequence number 46827; transaction id 14
+2022-08-04  3:22:34 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+2022-08-04  3:22:34 0 [Note] Plugin 'FEEDBACK' is disabled.
+2022-08-04  3:22:34 0 [Warning] You need to use --log-bin to make --expire-logs-days or --binlog-expire-logs-seconds work.
+2022-08-04  3:22:34 0 [Note] InnoDB: Buffer pool(s) load completed at 220804  3:22:34
+2022-08-04  3:22:34 0 [Note] Server socket created on IP: '0.0.0.0'.
+2022-08-04  3:22:34 0 [Note] Server socket created on IP: '::'.
+2022-08-04  3:22:34 0 [Note] mariadbd: ready for connections.
+Version: '10.8.3-MariaDB-1:10.8.3+maria~jammy'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
+2022-08-04  3:23:49 0 [Note] mariadbd (initiated by: unknown): Normal shutdown
+2022-08-04  3:23:49 0 [Note] InnoDB: FTS optimize thread exiting.
+2022-08-04  3:23:49 0 [Note] InnoDB: Starting shutdown...
+2022-08-04  3:23:49 0 [Note] InnoDB: Dumping buffer pool(s) to /var/lib/mysql/ib_buffer_pool
+2022-08-04  3:23:49 0 [Note] InnoDB: Buffer pool(s) dump completed at 220804  3:23:49
+2022-08-04  3:23:49 0 [Note] InnoDB: Removed temporary tablespace data file: "./ibtmp1"
+2022-08-04  3:23:49 0 [Note] InnoDB: Shutdown completed; log sequence number 46827; transaction id 15
+2022-08-04  3:23:49 0 [Note] mariadbd: Shutdown complete
+
+2022-08-04 03:24:53+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.8.3+maria~jammy started.
+2022-08-04 03:24:54+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2022-08-04 03:24:54+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.8.3+maria~jammy started.
+2022-08-04 03:24:54+00:00 [Note] [Entrypoint]: MariaDB upgrade not required
+2022-08-04  3:24:54 0 [Note] mariadbd (server 10.8.3-MariaDB-1:10.8.3+maria~jammy) starting as process 1 ...
+2022-08-04  3:24:54 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
+2022-08-04  3:24:54 0 [Note] InnoDB: Number of transaction pools: 1
+2022-08-04  3:24:54 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
+2022-08-04  3:24:54 0 [Note] mariadbd: O_TMPFILE is not supported on /tmp (disabling future attempts)
+2022-08-04  3:24:54 0 [Warning] mariadbd: io_uring_queue_init() failed with ENOMEM: try larger memory locked limit, ulimit -l, or https://mariadb.com/kb/en/systemd/#configuring-limitmemlock under systemd (262144 bytes required)
+2022-08-04  3:24:54 0 [Warning] InnoDB: liburing disabled: falling back to innodb_use_native_aio=OFF
+2022-08-04  3:24:54 0 [Note] InnoDB: Initializing buffer pool, total size = 128.000MiB, chunk size = 2.000MiB
+2022-08-04  3:24:54 0 [Note] InnoDB: Completed initialization of buffer pool
+2022-08-04  3:24:54 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
+2022-08-04  3:24:54 0 [Note] InnoDB: 128 rollback segments are active.
+2022-08-04  3:24:54 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2022-08-04  3:24:54 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2022-08-04  3:24:54 0 [Note] InnoDB: log sequence number 46827; transaction id 14
+2022-08-04  3:24:54 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+2022-08-04  3:24:54 0 [Note] Plugin 'FEEDBACK' is disabled.
+2022-08-04  3:24:54 0 [Warning] You need to use --log-bin to make --expire-logs-days or --binlog-expire-logs-seconds work.
+2022-08-04  3:24:54 0 [Note] Server socket created on IP: '0.0.0.0'.
+2022-08-04  3:24:54 0 [Note] Server socket created on IP: '::'.
+2022-08-04  3:24:54 0 [Note] InnoDB: Buffer pool(s) load completed at 220804  3:24:54
+2022-08-04  3:24:54 0 [Note] mariadbd: ready for connections.
+Version: '10.8.3-MariaDB-1:10.8.3+maria~jammy'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
+2022-08-04  3:31:49 0 [Note] mariadbd (initiated by: unknown): Normal shutdown
+2022-08-04  3:31:49 0 [Note] InnoDB: FTS optimize thread exiting.
+2022-08-04  3:31:49 0 [Note] InnoDB: Starting shutdown...
+2022-08-04  3:31:49 0 [Note] InnoDB: Dumping buffer pool(s) to /var/lib/mysql/ib_buffer_pool
+2022-08-04  3:31:49 0 [Note] InnoDB: Buffer pool(s) dump completed at 220804  3:31:49
+2022-08-04  3:31:49 0 [Note] InnoDB: Removed temporary tablespace data file: "./ibtmp1"
+2022-08-04  3:31:49 0 [Note] InnoDB: Shutdown completed; log sequence number 46827; transaction id 15
+2022-08-04  3:31:49 0 [Note] mariadbd: Shutdown complete
+
+2022-08-31 15:27:39+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.8.3+maria~jammy started.
+2022-08-31 15:27:45+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2022-08-31 15:27:46+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.8.3+maria~jammy started.
+2022-08-31 15:27:46+00:00 [Note] [Entrypoint]: MariaDB upgrade not required
+2022-08-31 15:27:46 0 [Note] mariadbd (server 10.8.3-MariaDB-1:10.8.3+maria~jammy) starting as process 1 ...
+2022-08-31 15:27:46 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
+2022-08-31 15:27:46 0 [Note] InnoDB: Number of transaction pools: 1
+2022-08-31 15:27:46 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
+2022-08-31 15:27:46 0 [Note] mariadbd: O_TMPFILE is not supported on /tmp (disabling future attempts)
+2022-08-31 15:27:46 0 [Warning] mariadbd: io_uring_queue_init() failed with ENOMEM: try larger memory locked limit, ulimit -l, or https://mariadb.com/kb/en/systemd/#configuring-limitmemlock under systemd (262144 bytes required)
+2022-08-31 15:27:46 0 [Warning] InnoDB: liburing disabled: falling back to innodb_use_native_aio=OFF
+2022-08-31 15:27:46 0 [Note] InnoDB: Initializing buffer pool, total size = 128.000MiB, chunk size = 2.000MiB
+2022-08-31 15:27:46 0 [Note] InnoDB: Completed initialization of buffer pool
+2022-08-31 15:27:46 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
+2022-08-31 15:27:46 0 [Note] InnoDB: 128 rollback segments are active.
+2022-08-31 15:27:46 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2022-08-31 15:27:46 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2022-08-31 15:27:46 0 [Note] InnoDB: log sequence number 46827; transaction id 14
+2022-08-31 15:27:46 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+2022-08-31 15:27:46 0 [Note] Plugin 'FEEDBACK' is disabled.
+2022-08-31 15:27:46 0 [Warning] You need to use --log-bin to make --expire-logs-days or --binlog-expire-logs-seconds work.
+2022-08-31 15:27:46 0 [Note] Server socket created on IP: '0.0.0.0'.
+2022-08-31 15:27:46 0 [Note] Server socket created on IP: '::'.
+2022-08-31 15:27:46 0 [Note] InnoDB: Buffer pool(s) load completed at 220831 15:27:46
+2022-08-31 15:27:46 0 [Note] mariadbd: ready for connections.
+Version: '10.8.3-MariaDB-1:10.8.3+maria~jammy'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
+2022-08-31 15:40:19 0 [Note] mariadbd (initiated by: unknown): Normal shutdown
+2022-08-31 15:40:19 0 [Note] InnoDB: FTS optimize thread exiting.
+2022-08-31 15:40:19 0 [Note] InnoDB: Starting shutdown...
+2022-08-31 15:40:19 0 [Note] InnoDB: Dumping buffer pool(s) to /var/lib/mysql/ib_buffer_pool
+2022-08-31 15:40:19 0 [Note] InnoDB: Buffer pool(s) dump completed at 220831 15:40:19
+2022-08-31 15:40:19 0 [Note] InnoDB: Removed temporary tablespace data file: "./ibtmp1"
+2022-08-31 15:40:19 0 [Note] InnoDB: Shutdown completed; log sequence number 46827; transaction id 15
+2022-08-31 15:40:19 0 [Note] mariadbd: Shutdown complete
+
+2024-02-05 11:23:32+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.8.3+maria~jammy started.
+2024-02-05 11:23:33+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2024-02-05 11:23:33+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.8.3+maria~jammy started.
+2024-02-05 11:23:33+00:00 [Note] [Entrypoint]: MariaDB upgrade not required
+2024-02-05 11:23:33 0 [Note] mariadbd (server 10.8.3-MariaDB-1:10.8.3+maria~jammy) starting as process 1 ...
+2024-02-05 11:23:33 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
+2024-02-05 11:23:33 0 [Note] InnoDB: Number of transaction pools: 1
+2024-02-05 11:23:33 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
+2024-02-05 11:23:33 0 [Note] mariadbd: O_TMPFILE is not supported on /tmp (disabling future attempts)
+2024-02-05 11:23:33 0 [Warning] mariadbd: io_uring_queue_init() failed with ENOMEM: try larger memory locked limit, ulimit -l, or https://mariadb.com/kb/en/systemd/#configuring-limitmemlock under systemd (262144 bytes required)
+2024-02-05 11:23:33 0 [Warning] InnoDB: liburing disabled: falling back to innodb_use_native_aio=OFF
+2024-02-05 11:23:33 0 [Note] InnoDB: Initializing buffer pool, total size = 128.000MiB, chunk size = 2.000MiB
+2024-02-05 11:23:33 0 [Note] InnoDB: Completed initialization of buffer pool
+2024-02-05 11:23:33 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
+2024-02-05 11:23:33 0 [Note] InnoDB: 128 rollback segments are active.
+2024-02-05 11:23:33 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2024-02-05 11:23:33 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2024-02-05 11:23:33 0 [Note] InnoDB: log sequence number 46827; transaction id 14
+2024-02-05 11:23:33 0 [Note] Plugin 'FEEDBACK' is disabled.
+2024-02-05 11:23:33 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+2024-02-05 11:23:33 0 [Warning] You need to use --log-bin to make --expire-logs-days or --binlog-expire-logs-seconds work.
+2024-02-05 11:23:33 0 [Note] InnoDB: Buffer pool(s) load completed at 240205 11:23:33
+2024-02-05 11:23:33 0 [Note] Server socket created on IP: '0.0.0.0'.
+2024-02-05 11:23:33 0 [Note] Server socket created on IP: '::'.
+2024-02-05 11:23:33 0 [Note] mariadbd: ready for connections.
+Version: '10.8.3-MariaDB-1:10.8.3+maria~jammy'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
+```
+
+</details>
+
+
+<details>
+
+  <summary>sudo docker inspect wordpress</summary>
+
+```console
+[
+    {
+        "Id": "6ffb084b515ca482ac58fad406b10837b44fb55610acbb35b8ed4a0fb24de50c",
+        "Created": "2022-08-04T03:22:49.885388997Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "apache2-foreground"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 900,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2024-02-05T11:23:32.617312869Z",
+            "FinishedAt": "2022-08-31T15:40:20.366876609Z"
+        },
+        "Image": "sha256:0a3bdd32ae210e34ed07cf49669dccbdb9deac143ebf27d5cc83136a0e3d9063",
+        "ResolvConfPath": "/var/lib/docker/containers/6ffb084b515ca482ac58fad406b10837b44fb55610acbb35b8ed4a0fb24de50c/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/6ffb084b515ca482ac58fad406b10837b44fb55610acbb35b8ed4a0fb24de50c/hostname",
+        "HostsPath": "/var/lib/docker/containers/6ffb084b515ca482ac58fad406b10837b44fb55610acbb35b8ed4a0fb24de50c/hosts",
+        "LogPath": "/var/lib/docker/containers/6ffb084b515ca482ac58fad406b10837b44fb55610acbb35b8ed4a0fb24de50c/6ffb084b515ca482ac58fad406b10837b44fb55610acbb35b8ed4a0fb24de50c-json.log",
+        "Name": "/wordpress",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "html:/var/www/html"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {
+                "80/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "80"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "always",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "KernelMemory": 0,
+            "KernelMemoryTCP": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/ce38c2ce47ad7d4bbbd8f5c7c4ed567023d2121aef7d943d0fa2550593cfbeea-init/diff:/var/lib/docker/overlay2/94106dc67f8c47bdc7f21b7607cae55e2cf94644b34d7698b3e174a3755275a6/diff:/var/lib/docker/overlay2/2936726c07d706d506728ed14cf8cab6e23916647e0838f0f79f86552c7010b3/diff:/var/lib/docker/overlay2/069acc5fa9bb5677b2aeb93fc0ef5773a23d6d7b1218cf75ef82aca71c6bda47/diff:/var/lib/docker/overlay2/c8afefd30aa9208d8c1d54d5fd332fc36608816b4dc77f94c1137c882a4ec821/diff:/var/lib/docker/overlay2/420654ce2976260a0830db88a78d5a347fb80aa7b790b2d9309ec7ae76d91d83/diff:/var/lib/docker/overlay2/422f6df2f56d58836998a749e631cab9406fd37800a3d4f7e4eda1f14f008d08/diff:/var/lib/docker/overlay2/3dfa1839ce3bd0b607fcddd25305125d66c7d2870a6e78dc5a01ba82134e1c42/diff:/var/lib/docker/overlay2/acdc673318ff934a6a1735e4a7c3ebfa98ba0b0e1fa7753bed3c36f7be05c5d7/diff:/var/lib/docker/overlay2/3b59127b861d3c1821590e1bbe53361762ec93b9e2471688cf1f16ed75698536/diff:/var/lib/docker/overlay2/3cdfd4f802d2ed04fe9f783aea4f7875b46338caa8d9cc83df921644933a7697/diff:/var/lib/docker/overlay2/c905fa690140ab324cdda21324f759f356b6672242462ddef823f3a8f2456463/diff:/var/lib/docker/overlay2/922e6ceb9fdab2f37d87a09a651497fa659d3c319b013db7427e8eed7487749b/diff:/var/lib/docker/overlay2/904795f943098776cc0a2c8385029bbeb398ae81f6aeedde6f459b7a06130bdd/diff:/var/lib/docker/overlay2/deea2b08a5738a2f6b20e9a9086884a3f181a21408bb140147395e2d3b6b2b88/diff:/var/lib/docker/overlay2/8fc975a0a76589eeb04b246a231d986b411913521b6bedf2e3a5d05908cce7c2/diff:/var/lib/docker/overlay2/0b6935279d515d0669f8a5565cbc0e4bf36dd21bd6632069d3192c34ec4f7d01/diff:/var/lib/docker/overlay2/11de313511ee3247d7543f251bf73d074c52306b38cb468d4406033996bb5579/diff:/var/lib/docker/overlay2/19a9f2c255dac237587a18b8f354abd11410dafc3284412d728c2bf7056313a0/diff:/var/lib/docker/overlay2/04234c51c40e87365dc7808e823f054571bbf2af947366973be0d82abe2d0a60/diff:/var/lib/docker/overlay2/80fe0530020bda727c7a7e05f8261966265ca1a07871152cf5c223d362ec80c3/diff:/var/lib/docker/overlay2/1abcbc54c55abf66822fefb38dbb5816fc59bdb685ced0528db4a3bcf62ebe9b/diff:/var/lib/docker/overlay2/51d8beae216b4b10c5755ae738c4abd12efa13403c8d1c5b0ced1fd44b9b48f3/diff",
+                "MergedDir": "/var/lib/docker/overlay2/ce38c2ce47ad7d4bbbd8f5c7c4ed567023d2121aef7d943d0fa2550593cfbeea/merged",
+                "UpperDir": "/var/lib/docker/overlay2/ce38c2ce47ad7d4bbbd8f5c7c4ed567023d2121aef7d943d0fa2550593cfbeea/diff",
+                "WorkDir": "/var/lib/docker/overlay2/ce38c2ce47ad7d4bbbd8f5c7c4ed567023d2121aef7d943d0fa2550593cfbeea/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "html",
+                "Source": "/var/lib/docker/volumes/html/_data",
+                "Destination": "/var/www/html",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "6ffb084b515c",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "80/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "WORDPRESS_DB_PASSWORD=password",
+                "WORDPRESS_DB_USER=root",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "PHPIZE_DEPS=autoconf \t\tdpkg-dev \t\tfile \t\tg++ \t\tgcc \t\tlibc-dev \t\tmake \t\tpkg-config \t\tre2c",
+                "PHP_INI_DIR=/usr/local/etc/php",
+                "APACHE_CONFDIR=/etc/apache2",
+                "APACHE_ENVVARS=/etc/apache2/envvars",
+                "PHP_CFLAGS=-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+                "PHP_CPPFLAGS=-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+                "PHP_LDFLAGS=-Wl,-O1 -pie",
+                "GPG_KEYS=42670A7FE4D0441C8E4632349E4FDC074A4EF02D 5A52880781F755608BF815FC910DEB46F53EA312",
+                "PHP_VERSION=7.4.30",
+                "PHP_URL=https://www.php.net/distributions/php-7.4.30.tar.xz",
+                "PHP_ASC_URL=https://www.php.net/distributions/php-7.4.30.tar.xz.asc",
+                "PHP_SHA256=ea72a34f32c67e79ac2da7dfe96177f3c451c3eefae5810ba13312ed398ba70d"
+            ],
+            "Cmd": [
+                "apache2-foreground"
+            ],
+            "Image": "wordpress:sad",
+            "Volumes": {
+                "/var/www/html": {}
+            },
+            "WorkingDir": "/var/www/html",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "fa7c866c125b6bdbe158555fca49a8d871d32282817db2f396e0ff43d7a93eb4",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "admin",
+                "com.docker.compose.project.config_files": "docker-compose.yaml",
+                "com.docker.compose.project.working_dir": "/home/admin",
+                "com.docker.compose.service": "wordpress",
+                "com.docker.compose.version": "1.25.0"
+            },
+            "StopSignal": "SIGWINCH"
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "15933d22254f177f9ec1717cc15e11628b51802fb573633f9d831fa09e88e67d",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {
+                "80/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "80"
+                    }
+                ]
+            },
+            "SandboxKey": "/var/run/docker/netns/15933d22254f",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "0720fd9f938e2052e13d4b0fe73663fbae31b784dea4942e53fa5d96e78982f5",
+            "Gateway": "172.17.0.1",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "172.17.0.3",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "MacAddress": "02:42:ac:11:00:03",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "41e1fb33abcef2772dadcf2943d42ec330cb6bb2cd191a2bd1243b12cfda7f18",
+                    "EndpointID": "0720fd9f938e2052e13d4b0fe73663fbae31b784dea4942e53fa5d96e78982f5",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.3",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:03",
+                    "DriverOpts": null
+                }
+            }
+        }
+    }
+]
+```
+
+</details>
+
+
+<details>
+
+  <summary>sudo docker inspect mariadb</summary>
+
+```console
+[
+    {
+        "Id": "0eef97284c44a702a82c97921983d398e6268dfbb9db242b622598d2d863ccdf",
+        "Created": "2022-08-04T03:22:33.454861483Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "mariadbd"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 893,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2024-02-05T11:23:32.550263251Z",
+            "FinishedAt": "2022-08-31T15:40:19.473381119Z"
+        },
+        "Image": "sha256:40b966d7252f541b41677fc35f8660fa90d14df0f33edc8085e6ca2dc0c5b247",
+        "ResolvConfPath": "/var/lib/docker/containers/0eef97284c44a702a82c97921983d398e6268dfbb9db242b622598d2d863ccdf/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/0eef97284c44a702a82c97921983d398e6268dfbb9db242b622598d2d863ccdf/hostname",
+        "HostsPath": "/var/lib/docker/containers/0eef97284c44a702a82c97921983d398e6268dfbb9db242b622598d2d863ccdf/hosts",
+        "LogPath": "/var/lib/docker/containers/0eef97284c44a702a82c97921983d398e6268dfbb9db242b622598d2d863ccdf/0eef97284c44a702a82c97921983d398e6268dfbb9db242b622598d2d863ccdf-json.log",
+        "Name": "/mariadb",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "database:/var/lib/mysql"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {
+                "3306/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "3306"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "always",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "KernelMemory": 0,
+            "KernelMemoryTCP": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/82783479443dcee9683d0c77cad8d52df60284aef1b1df35e4da31b2530cf4f5-init/diff:/var/lib/docker/overlay2/7740e691233a1c197e662ad77ec81479ed9ee9d74da2a5ce2cfec614ff7b4053/diff:/var/lib/docker/overlay2/7ddaa46c247ab6759a7b0f24731bccbfee84d6fae9e785da4f90be92ce36fa76/diff:/var/lib/docker/overlay2/921909c8634e43b6aca256b4e0f7436a35ec1115c3ea11823d7b4de7b447388d/diff:/var/lib/docker/overlay2/77f6448b303e9263bacfd0d8f7df4bee6d6da5f4a37b830f909836ffde96dbe2/diff:/var/lib/docker/overlay2/921e829602a7cac3a7bc75e7af38769b64cd2062aaeb1ed5f653e5c14210135c/diff:/var/lib/docker/overlay2/98cffa49a98858ce3df1aa89daa3782ed3197d3d2dea86abcd3be8fc33ce38d9/diff:/var/lib/docker/overlay2/855a0892a98c90f48dc35b608cd29d019cb5cb591080b60f60823b482d340695/diff:/var/lib/docker/overlay2/29bad57646c95050481a5f7bda7fb1139921db773d5cfa5fe2b7408c81b9e87b/diff:/var/lib/docker/overlay2/e319e6d9991ec24f650a11b56be67f812eb33540d12b665a85d467a881aeba05/diff:/var/lib/docker/overlay2/c1abd008bb694bedefebce77264f80634e94eba834240e926b0213ce74574fea/diff:/var/lib/docker/overlay2/9ab120a896d5de2091e831d4bb3d8e2db53a05e261f7308d4b1b6f889cc66535/diff",
+                "MergedDir": "/var/lib/docker/overlay2/82783479443dcee9683d0c77cad8d52df60284aef1b1df35e4da31b2530cf4f5/merged",
+                "UpperDir": "/var/lib/docker/overlay2/82783479443dcee9683d0c77cad8d52df60284aef1b1df35e4da31b2530cf4f5/diff",
+                "WorkDir": "/var/lib/docker/overlay2/82783479443dcee9683d0c77cad8d52df60284aef1b1df35e4da31b2530cf4f5/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "database",
+                "Source": "/var/lib/docker/volumes/database/_data",
+                "Destination": "/var/lib/mysql",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "0eef97284c44",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "3306/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "MYSQL_ROOT_PASSWORD=password",
+                "MYSQL_DATABASE=wordpress",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "GOSU_VERSION=1.14",
+                "MARIADB_MAJOR=10.8",
+                "MARIADB_VERSION=1:10.8.3+maria~jammy"
+            ],
+            "Cmd": [
+                "mariadbd"
+            ],
+            "Image": "mariadb:latest",
+            "Volumes": {
+                "/var/lib/mysql": {}
+            },
+            "WorkingDir": "",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "076abbc6fa2b2494592f53e4aad7ac41e3f50c24f04fcd09e61e53cff9b8110a",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {
+                "3306/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "3306"
+                    }
+                ]
+            },
+            "SandboxKey": "/var/run/docker/netns/076abbc6fa2b",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "5420d8833d7a64bda9e3dd4ac2df0549f0b8c8cd4e3cdf9600ed4af19c102634",
+            "Gateway": "172.17.0.1",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "172.17.0.2",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "MacAddress": "02:42:ac:11:00:02",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "41e1fb33abcef2772dadcf2943d42ec330cb6bb2cd191a2bd1243b12cfda7f18",
+                    "EndpointID": "5420d8833d7a64bda9e3dd4ac2df0549f0b8c8cd4e3cdf9600ed4af19c102634",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:02",
+                    "DriverOpts": null
+                }
+            }
+        }
+    }
+]
+```
+
+</details>
+
+
+`sudo docker exec wordpress env |grep WORDPRESS_DB_`  
+```console
+WORDPRESS_DB_PASSWORD=password
+WORDPRESS_DB_USER=root
+```
+
+`grep WORDPRESS_DB_ ./html/wp-config.php`  
+```console
+define( 'DB_NAME', getenv_docker('WORDPRESS_DB_NAME', 'wordpress') );
+define( 'DB_USER', getenv_docker('WORDPRESS_DB_USER', 'example username') );
+define( 'DB_PASSWORD', getenv_docker('WORDPRESS_DB_PASSWORD', 'example password') );
+define( 'DB_HOST', getenv_docker('WORDPRESS_DB_HOST', 'mysql') );
+define( 'DB_CHARSET', getenv_docker('WORDPRESS_DB_CHARSET', 'utf8') );
+define( 'DB_COLLATE', getenv_docker('WORDPRESS_DB_COLLATE', '') );
+```
+
+
+`mysql -h 127.0.0.1 -u root -ppassword`  
+```console
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 3
+Server version: 10.8.3-MariaDB-1:10.8.3+maria~jammy mariadb.org binary distribution
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+MariaDB [(none)]>
+SELECT user ();
++-----------------+
+| user ()         |
++-----------------+
+| root@172.17.0.1 |
++-----------------+
+1 row in set (0.002 sec)
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| wordpress          |
++--------------------+
+5 rows in set (0.006 sec)
+
+MariaDB [(none)]>use wordpress;
+Database changed
+MariaDB [wordpress]> show tables;
+Empty set (0.000 sec)
+MariaDB [wordpress]> SELECT user FROM mysql.user;
++-------------+
+| User        |
++-------------+
+| root        |
+| mariadb.sys |
+| root        |
++-------------+
+3 rows in set (0.012 sec)
+MariaDB [(none)]>
 ```
 
