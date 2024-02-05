@@ -1012,6 +1012,13 @@ services:
 
 #### 3. Run it
 `docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)`  
+```console
+6ffb084b515c
+0eef97284c44
+6ffb084b515c
+0eef97284c44
+```
+
 `docker-compose up -d`  
 ```console
 docker-compose up -d
