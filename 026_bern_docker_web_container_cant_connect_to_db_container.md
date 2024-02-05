@@ -981,7 +981,7 @@ MariaDB [wordpress]> SELECT user FROM mysql.user;
 MariaDB [(none)]>
 ```
 
-##### All seems like OK, except for the absence of network connectivity between two docker containers. In order to solve this issue, we will use a Docker Compose.
+##### Everything seems OK, except for the absence of network connectivity between two docker containers. In order to solve this issue, we will use a Docker Compose.
 
 
 #### 2. Create docker-compose.yaml
