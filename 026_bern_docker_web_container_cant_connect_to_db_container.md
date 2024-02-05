@@ -932,8 +932,12 @@ define( 'DB_CHARSET', getenv_docker('WORDPRESS_DB_CHARSET', 'utf8') );
 define( 'DB_COLLATE', getenv_docker('WORDPRESS_DB_COLLATE', '') );
 ```
 
+`sudo docker exec mariadb mysqladmin -h localhost -u root -ppassword ping`  
+```console
+mysqld is alive
+```
 
-`mysql -h 127.0.0.1 -u root -ppassword`  
+`sudo docker exec mariadb mysql -h 127.0.0.1 -u root -ppassword`  
 ```console
 Welcome to the MariaDB monitor.  Commands end with ; or \g.
 Your MariaDB connection id is 3
@@ -977,15 +981,11 @@ MariaDB [wordpress]> SELECT user FROM mysql.user;
 MariaDB [(none)]>
 ```
 
-`docker exec mariadb mysqladmin -h localhost -u root -ppassword ping`  
-```console
-mysqld is alive
-```
 ##### All seems like OK, except for the absence of network connectivity between two docker containers. In order to solve this issue, we will use a Docker Compose.
 
 
 #### 2. Create docker-compose.yaml
-`docker-compose -v`  
+`sudo docker-compose -v`  
 ```console
 docker-compose version 1.25.0, build unknown
 ```
@@ -1020,7 +1020,7 @@ services:
 
 
 #### 3. Run it
-`docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)`  
+`sudo docker stop $(docker ps -a -q) && sudo docker rm $(docker ps -a -q)`  
 ```console
 6ffb084b515c
 0eef97284c44
@@ -1028,15 +1028,14 @@ services:
 0eef97284c44
 ```
 
-`docker-compose up -d`  
+`sudo docker-compose up -d`  
 ```console
-docker-compose up -d
 Creating network "admin_default" with the default driver
 Creating mysql ... done
 Recreating wordpress ... done
 ```
 
-`docker ps`  
+`sudo docker ps`  
 ```console
 CONTAINER ID   IMAGE            COMMAND                  CREATED         STATUS         PORTS                    NAMES
 0a79c78de0cf   wordpress:sad    "docker-entrypoint.s…"   8 seconds ago   Up 7 seconds   0.0.0.0:80->80/tcp       wordpress
@@ -1232,7 +1231,7 @@ jQuery( function( $ ) {
 
 
 #### 5. Validate the task
-`docker exec wordpress mysqladmin -h mysql -u root -ppassword ping`  
+`sudo docker exec wordpress mysqladmin -h mysql -u root -ppassword ping`  
 ```console
 mysqld is alive
 ```
