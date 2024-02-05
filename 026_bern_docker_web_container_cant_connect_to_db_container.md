@@ -977,3 +977,251 @@ MariaDB [wordpress]> SELECT user FROM mysql.user;
 MariaDB [(none)]>
 ```
 
+##### All seems like OK, except for the absence of network connectivity between two docker containers. In order to solve this issue, we will use a Docker Compose.
+
+
+#### 2. Create docker-compose.yaml
+`vi /home/admin/docker-compose.yaml`  
+```console
+version: "3"
+
+services:
+  mysql:
+    image: mariadb:latest
+    container_name: mysql
+    hostname: mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: wordpress
+
+  wordpress:
+    image: wordpress:sad
+    container_name: wordpress
+    hostname: wordpress
+    ports:
+      - 80:80
+    environment:
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_USER: root
+    depends_on:
+      - mysql
+```
+
+
+#### 3. Run it
+`docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)`  
+`docker-compose up -d`  
+```console
+docker-compose up -d
+Creating network "admin_default" with the default driver
+Creating mysql ... done
+Recreating wordpress ... done
+```
+
+`docker ps`  
+```console
+CONTAINER ID   IMAGE            COMMAND                  CREATED         STATUS         PORTS                    NAMES
+0a79c78de0cf   wordpress:sad    "docker-entrypoint.s…"   8 seconds ago   Up 7 seconds   0.0.0.0:80->80/tcp       wordpress
+64aad9db9a97   mariadb:latest   "docker-entrypoint.s…"   9 seconds ago   Up 8 seconds   0.0.0.0:3306->3306/tcp   mysql
+```
+
+
+#### 4. Check web server
+<details>
+
+  <summary>curl -v -L localhost:80</summary>
+
+```html
+*   Trying 127.0.0.1:80...
+* Connected to localhost (127.0.0.1) port 80 (#0)
+> GET / HTTP/1.1
+> Host: localhost
+> User-Agent: curl/7.74.0
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 302 Found
+< Date: Mon, 05 Feb 2024 14:29:36 GMT
+< Server: Apache/2.4.54 (Debian)
+< X-Powered-By: PHP/7.4.30
+< Expires: Wed, 11 Jan 1984 05:00:00 GMT
+< Cache-Control: no-cache, must-revalidate, max-age=0
+< X-Redirect-By: WordPress
+< Location: http://localhost/wp-admin/install.php
+< Content-Length: 0
+< Content-Type: text/html; charset=UTF-8
+< 
+* Connection #0 to host localhost left intact
+* Issue another request to this URL: 'http://localhost/wp-admin/install.php'
+* Found bundle for host localhost: 0x559782ab72f0 [serially]
+* Can not multiplex, even if we wanted to!
+* Re-using existing connection! (#0) with host localhost
+* Connected to localhost (127.0.0.1) port 80 (#0)
+> GET /wp-admin/install.php HTTP/1.1
+> Host: localhost
+> User-Agent: curl/7.74.0
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< Date: Mon, 05 Feb 2024 14:29:36 GMT
+< Server: Apache/2.4.54 (Debian)
+< X-Powered-By: PHP/7.4.30
+< Expires: Wed, 11 Jan 1984 05:00:00 GMT
+< Cache-Control: no-cache, must-revalidate, max-age=0
+< Vary: Accept-Encoding
+< Content-Length: 6960
+< Content-Type: text/html; charset=utf-8
+< 
+<!DOCTYPE html>
+<html lang="en-US" xml:lang="en-US">
+<head>
+        <meta name="viewport" content="width=device-width" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="robots" content="noindex,nofollow" />
+        <title>WordPress &rsaquo; Installation</title>
+        <link rel='stylesheet' id='dashicons-css'  href='http://localhost/wp-includes/css/dashicons.min.css?ver=6.0.1' type='text/css' media='all' />
+<link rel='stylesheet' id='buttons-css'  href='http://localhost/wp-includes/css/buttons.min.css?ver=6.0.1' type='text/css' media='all' />
+<link rel='stylesheet' id='forms-css'  href='http://localhost/wp-admin/css/forms.min.css?ver=6.0.1' type='text/css' media='all' />
+<link rel='stylesheet' id='l10n-css'  href='http://localhost/wp-admin/css/l10n.min.css?ver=6.0.1' type='text/css' media='all' />
+<link rel='stylesheet' id='install-css'  href='http://localhost/wp-admin/css/install.min.css?ver=6.0.1' type='text/css' media='all' />
+</head>
+<body class="wp-core-ui">
+<p id="logo">WordPress</p>
+
+        <h1>Welcome</h1>
+<p>Welcome to the famous five-minute WordPress installation process! Just fill in the information below and you&#8217;ll be on your way to using the most extendable and powerful personal publishing platform in the world.</p>
+
+<h2>Information needed</h2>
+<p>Please provide the following information. Do not worry, you can always change these settings later.</p>
+
+                <form id="setup" method="post" action="install.php?step=2" novalidate="novalidate">
+        <table class="form-table" role="presentation">
+                <tr>
+                        <th scope="row"><label for="weblog_title">Site Title</label></th>
+                        <td><input name="weblog_title" type="text" id="weblog_title" size="25" value="" /></td>
+                </tr>
+                <tr>
+                        <th scope="row"><label for="user_login">Username</label></th>
+                        <td>
+                                                        <input name="user_name" type="text" id="user_login" size="25" value="" />
+                                <p>Usernames can have only alphanumeric characters, spaces, underscores, hyphens, periods, and the @ symbol.</p>
+                                                        </td>
+                </tr>
+                                <tr class="form-field form-required user-pass1-wrap">
+                        <th scope="row">
+                                <label for="pass1">
+                                        Password                                </label>
+                        </th>
+                        <td>
+                                <div class="wp-pwd">
+                                                                                <input type="password" name="admin_password" id="pass1" class="regular-text" autocomplete="new-password" data-reveal="1" data-pw="AYNFoXD#DJrgQ$T8ux" aria-describedby="pass-strength-result" />
+                                        <button type="button" class="button wp-hide-pw hide-if-no-js" data-start-masked="0" data-toggle="0" aria-label="Hide password">
+                                                <span class="dashicons dashicons-hidden"></span>
+                                                <span class="text">Hide</span>
+                                        </button>
+                                        <div id="pass-strength-result" aria-live="polite"></div>
+                                </div>
+                                <p><span class="description important hide-if-no-js">
+                                <strong>Important:</strong>
+                                                                You will need this password to log&nbsp;in. Please store it in a secure location.</span></p>
+                        </td>
+                </tr>
+                <tr class="form-field form-required user-pass2-wrap hide-if-js">
+                        <th scope="row">
+                                <label for="pass2">Repeat Password                                      <span class="description">(required)</span>
+                                </label>
+                        </th>
+                        <td>
+                                <input name="admin_password2" type="password" id="pass2" autocomplete="new-password" />
+                        </td>
+                </tr>
+                <tr class="pw-weak">
+                        <th scope="row">Confirm Password</th>
+                        <td>
+                                <label>
+                                        <input type="checkbox" name="pw_weak" class="pw-checkbox" />
+                                        Confirm use of weak password                            </label>
+                        </td>
+                </tr>
+                                <tr>
+                        <th scope="row"><label for="admin_email">Your Email</label></th>
+                        <td><input name="admin_email" type="email" id="admin_email" size="25" value="" />
+                        <p>Double-check your email address before continuing.</p></td>
+                </tr>
+                <tr>
+                        <th scope="row">Search engine visibility</th>
+                        <td>
+                                <fieldset>
+                                        <legend class="screen-reader-text"><span>Search engine visibility </span></legend>
+                                                                                        <label for="blog_public"><input name="blog_public" type="checkbox" id="blog_public" value="0"  />
+                                                Discourage search engines from indexing this site</label>
+                                                <p class="description">It is up to search engines to honor this request.</p>
+                                                                        </fieldset>
+                        </td>
+                </tr>
+        </table>
+        <p class="step"><input type="submit" name="Submit" id="submit" class="button button-large" value="Install WordPress"  /></p>
+        <input type="hidden" name="language" value="" />
+</form>
+        <script type="text/javascript">var t = document.getElementById('weblog_title'); if (t){ t.focus(); }</script>
+        <script type='text/javascript' src='http://localhost/wp-includes/js/jquery/jquery.min.js?ver=3.6.0' id='jquery-core-js'></script>
+<script type='text/javascript' src='http://localhost/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2' id='jquery-migrate-js'></script>
+<script type='text/javascript' id='zxcvbn-async-js-extra'>
+/* <![CDATA[ */
+var _zxcvbnSettings = {"src":"http:\/\/localhost\/wp-includes\/js\/zxcvbn.min.js"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://localhost/wp-includes/js/zxcvbn-async.min.js?ver=1.0' id='zxcvbn-async-js'></script>
+<script type='text/javascript' src='http://localhost/wp-includes/js/dist/vendor/regenerator-runtime.min.js?ver=0.13.9' id='regenerator-runtime-js'></script>
+<script type='text/javascript' src='http://localhost/wp-includes/js/dist/vendor/wp-polyfill.min.js?ver=3.15.0' id='wp-polyfill-js'></script>
+<script type='text/javascript' src='http://localhost/wp-includes/js/dist/hooks.min.js?ver=c6d64f2cb8f5c6bb49caca37f8828ce3' id='wp-hooks-js'></script>
+<script type='text/javascript' src='http://localhost/wp-includes/js/dist/i18n.min.js?ver=ebee46757c6a411e38fd079a7ac71d94' id='wp-i18n-js'></script>
+<script type='text/javascript' id='wp-i18n-js-after'>
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+</script>
+<script type='text/javascript' id='password-strength-meter-js-extra'>
+/* <![CDATA[ */
+var pwsL10n = {"unknown":"Password strength unknown","short":"Very weak","bad":"Weak","good":"Medium","strong":"Strong","mismatch":"Mismatch"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://localhost/wp-admin/js/password-strength-meter.min.js?ver=6.0.1' id='password-strength-meter-js'></script>
+<script type='text/javascript' src='http://localhost/wp-includes/js/underscore.min.js?ver=1.13.3' id='underscore-js'></script>
+<script type='text/javascript' id='wp-util-js-extra'>
+/* <![CDATA[ */
+var _wpUtilSettings = {"ajax":{"url":"\/wp-admin\/admin-ajax.php"}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://localhost/wp-includes/js/wp-util.min.js?ver=6.0.1' id='wp-util-js'></script>
+<script type='text/javascript' id='user-profile-js-extra'>
+/* <![CDATA[ */
+var userProfileL10n = {"user_id":"0","nonce":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://localhost/wp-admin/js/user-profile.min.js?ver=6.0.1' id='user-profile-js'></script>
+<script type="text/javascript">
+jQuery( function( $ ) {
+        $( '.hide-if-no-js' ).removeClass( 'hide-if-no-js' );
+} );
+</script>
+</body>
+</html>
+* Connection #0 to host localhost left intact
+```
+
+</details>
+
+
+
+#### 5. Validate the task
+`docker exec wordpress mysqladmin -h mysql -u root -ppassword ping`  
+```console
+mysqld is alive
+```
+
+`./agent/check.sh`  
+```console
+OK
+```
