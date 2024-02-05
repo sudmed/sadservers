@@ -1004,6 +1004,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: wordpress
+    volumes:
+      - /home/admin/database:/var/lib/mysql
 
   wordpress:
     image: wordpress:sad
@@ -1014,6 +1016,8 @@ services:
     environment:
       WORDPRESS_DB_PASSWORD: password
       WORDPRESS_DB_USER: root
+    volumes:
+      - /home/admin/html:/var/www/html
     depends_on:
       - mysql
 ```
