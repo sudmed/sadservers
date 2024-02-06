@@ -166,6 +166,19 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 2024/02/06 13:14:53 [notice] 1018416#1018416: signal process started
 ```
 
+`curl -I localhost:7777`  
+```console
+HTTP/1.1 200 OK
+Server: nginx/1.22.1
+Date: Tue, 06 Feb 2024 13:15:35 GMT
+Content-Type: text/html
+Content-Length: 615
+Last-Modified: Tue, 06 Feb 2024 13:14:53 GMT
+Connection: keep-alive
+ETag: "65c231f5-267"
+Accept-Ranges: bytes
+```
+
 #### 5. Validate the task
 `cd /home/admin/agent/ && ./check.sh`  
 ```console
