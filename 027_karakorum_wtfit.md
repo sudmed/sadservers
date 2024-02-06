@@ -116,11 +116,10 @@ write(1, "ERROR: can't connect to server\n", 31ERROR: can't connect to server
 exit_group(1)                           = ?
 +++ exited with 1 +++
 ```
+##### There is an error: can't connect to server 127.0.0.1:7777. Because there is no local web server!
 
-##### There is an error: can't connect to server 127.0.0.1:7777. And what about web server?
 
-
-#### 5. Try NGINX
+#### 5. Let's try to configure NGINX
 `systemctl status nginx`  
 ```console
 ● nginx.service - A high performance web server and a reverse proxy server
@@ -185,5 +184,5 @@ OK.
 `python3 -m http.server 7777`  
 ```console
 Serving HTTP on 0.0.0.0 port 7777 (http://0.0.0.0:7777/) ...
-127.0.0.1 - - [06/Feb/2024 13:06:22] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [06/Feb/2024 13:16:22] "GET / HTTP/1.1" 200 -
 ```
