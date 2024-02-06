@@ -89,9 +89,6 @@ exit_group(1)                           = ?
 
 #### 4. Make file
 `touch /home/admin/wtfitconfig.conf`  
-```console
-```
-
 ##### And try again...
 
 `/home/admin/wtfit`  
