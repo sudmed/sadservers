@@ -28,6 +28,16 @@ drwxr-xr-x 2 admin admin 4096 Sep 18  2022 agent
 -rw-r--r-- 1 admin admin  219 Sep 17  2022 nodeport.yml
 ```
 
+`curl localhost`  
+```console
+404 page not found
+```
+
+`curl localhost:8888`  
+```console
+curl: (7) Failed to connect to localhost port 8888: Connection refused
+```
+
 `cat agent/check.sh`  
 ```bash
 #!/usr/bin/bash
@@ -259,15 +269,99 @@ Events:
 
 </details>
 
+##### As we can see, there is an Error: ImagePullBackOff while pulling image "webapp". Let's try to pull it manually.
 
-`curl localhost`  
+
+#### 2. Try to pull the image
+`docker pull webapp`  
 ```console
-404 page not found
+Using default tag: latest
+Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
+```
+##### OK, no chance. Let's take a look at the previously pulled images.
+
+#### 3. List pulled images
+`docker images --digests`  
+```console
+REPOSITORY   TAG        DIGEST                                                                    IMAGE ID       CREATED         SIZE
+webapp       latest     <none>                                                                    9c082e2983bc   16 months ago   135MB
+python       3.7-slim   sha256:48876a8a7db7ce3af5836ac638dc202f4589d300dc666f1d2507ddcda6cb5ce4   c1d0bab51bbf   17 months ago   123MB
+registry     2          sha256:83bb78d7b28f1ac99c68133af32c93e9a1c149bcd3cb6e683a3ee56e312f1c96   3a0f7b0a13ef   18 months ago   24.1MB
+```
+##### We have an image `webapp` without digest and a registry image. We can run the registry and push `webapp` image into it, then pull it from the deployment manifest.
+
+
+#### 4. Run registry and push image
+`docker run -d -p 5000:5000 registry:2`  
+```console
+3afde6159949d6fd205921e2e0ef369f5fbfeed766e5f5f5eeb1eb297b232d15
 ```
 
+`docker tag webapp localhost:5000/webapp`  
+`docker push localhost:5000/webapp`  
+```console
+Using default tag: latest
+The push refers to repository [localhost:5000/webapp]
+d4a3f4c0cc92: Pushed 
+2d08ca8d8c31: Pushed 
+be0120f1f0a9: Pushed 
+f1ec60f70b75: Pushed 
+55fd06cb471b: Pushed 
+b249887652be: Pushed 
+95a02847aa85: Pushed 
+b45078e74ec9: Pushed 
+latest: digest: sha256:529296e183723c5170e832cac2c1144e3f11c15d33bee5900d88842df0232e35 size: 1995
+```
+
+
+#### 5. Fix image and port in deployment.yml
+`vi deployment.yml`  
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-deployment
+  namespace: web
+spec:
+  selector:
+    matchLabels:
+      app: webapp
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: webapp
+        image: localhost:5000/webapp
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8888
+```
+
+`kubectl apply -f deployment.yml`  
+```console
+deployment.apps/webapp-deployment configured
+```
+
+
+#### 6. Forward container port to localhost
+`kubectl port-forward deployments/webapp-deployment 8888 -n web &`  
+```console
+[1] 1835
+root@ip-10-0-0-64:/home/admin# Forwarding from 127.0.0.1:8888 -> 8888
+Forwarding from [::1]:8888 -> 8888
+```
+
+
+#### 7. Validate the task
 `curl localhost:8888`  
 ```console
-curl: (7) Failed to connect to localhost port 8888: Connection refused
+Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch
 ```
 
-
+`cd ~/agent && ./check.sh`  
+```console
+OK
+```
