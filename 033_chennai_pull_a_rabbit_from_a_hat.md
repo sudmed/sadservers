@@ -1040,7 +1040,7 @@ Traceback (most recent call last):
 pika.exceptions.ProbableAuthenticationError: ConnectionClosedByBroker: (403) 'ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile.'
 ```
 
-##### Let's check the logs.
+##### It fails. Let's check the logs
 
 `docker compose logs`  
 ```console
