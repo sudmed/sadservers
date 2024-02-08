@@ -707,10 +707,10 @@ else
     rabbitmqctl start_app
 fi
 
-## Keep foreground process active ...
-#while true; do
-  #sleep 60
-#done
+# # Keep foreground process active ...
+# while true; do
+#   sleep 60
+# done
 
 # Keep foreground process active ...
 tail -f /dev/null
