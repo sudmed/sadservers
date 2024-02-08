@@ -662,7 +662,7 @@ tail: cannot open '/var/log/rabbitmq/*.log' for reading: No such file or directo
 tail: no files remaining
 ```
 
-##### We can fix the error by creating a missing file, but it doesn't make sense. The comment in `cluster-entrypoint.sh` clearly says that this code `tail -f /var/log/rabbitmq/*.log` is only needed to Keep foreground process active.  
+##### We could fix the error by creating a missing file, but that doesn't make sense. The comment in `cluster-entrypoint.sh` clearly says that this code `tail -f /var/log/rabbitmq/*.log` is only needed to "Keep foreground process active".  
 ##### Let's add any additional code to keep the process running. For example, we will use an infinite loop.
 
 
