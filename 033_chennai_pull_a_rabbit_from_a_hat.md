@@ -663,7 +663,7 @@ tail: no files remaining
 ```
 
 ##### We could fix the error by creating a missing file, but that doesn't make sense. The comment in `cluster-entrypoint.sh` clearly says that this code `tail -f /var/log/rabbitmq/*.log` is only needed to "Keep foreground process active".  
-##### Let's add any additional code to keep the process running, so the container continues to exist and doesn't exit. For example, we will use an infinite `while` loop with `sleep` command.
+##### Let's add any other additional code to keep the process running, so the container continues to exist and doesn't exit. For example, we will use an infinite `while` loop with `sleep` command.
 
 
 #### 2. Add infinite loop into the cluster-entrypoint.sh
