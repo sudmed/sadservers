@@ -650,13 +650,27 @@ rabbitmq-cluster-docker-master-rabbitmq2-1 exited with code 69
 </details>
 
 
+`python3 ~/producer.py hello-lwc`  
+```console
+Traceback (most recent call last):
+  File "/home/admin/producer.py", line 18, in <module>
+    connection = pika.BlockingConnection(parameters)
+  File "/usr/local/lib/python3.9/dist-packages/pika/adapters/blocking_connection.py", line 360, in __init__
+    self._impl = self._create_connection(parameters, _impl_class)
+  File "/usr/local/lib/python3.9/dist-packages/pika/adapters/blocking_connection.py", line 451, in _create_connection
+    raise self._reap_last_connection_workflow_error(error)
+pika.exceptions.IncompatibleProtocolError: StreamLostError: ('Transport indicated EOF',)
+```
+##### The `producer.py` script can't send message cause of `IncompatibleProtocolError`.
+
+
 `docker compose ps`  
 ```console
 NAME                                       IMAGE         COMMAND                                                                SERVICE   CREATED          STATUS          PORTS
 rabbitmq-cluster-docker-master-haproxy-1   haproxy:1.7   "docker-entrypoint.sh haproxy -f /usr/local/etc/haproxy/haproxy.cfg"   haproxy   16 minutes ago   Up 16 minutes   0.0.0.0:5672->5672/tcp, :::5672->5672/tcp, 0.0.0.0:15672->15672/tcp, :::15672->15672/tcp
 ```
 
-##### We see that the cluster has not started and we see the error when RMQ cluster was starting
+##### We see that the cluster has not started, and an error occupied when RMQ cluster have been starting. 
 ```console
 tail: cannot open '/var/log/rabbitmq/*.log' for reading: No such file or directory
 tail: no files remaining
@@ -736,7 +750,7 @@ Traceback (most recent call last):
 TypeError: queue must be a str or unicode str, but got None
 ```
 
-##### As we can see the error `queue must be a str or unicode str, but got None`, the issue is in the queue name becase of authentication error. Let's check it in `consumer.py` and `.env` for `docker-compose.yml`.
+##### As we can see the error `queue must be a str or unicode str, but got None`, the issue is in the queue name becase of authentication error. Let's check it in docker compose logs, `consumer.py` and `.env` for `docker-compose.yml`.
 
 `docker compose logs`  
 
@@ -747,47 +761,45 @@ TypeError: queue must be a str or unicode str, but got None
 ```console
 rabbitmq-cluster-docker-master-rabbitmq3-1  | Starting RabbitMQ Server For host:  rabbitmq3
 rabbitmq-cluster-docker-master-rabbitmq3-1  | Waiting for pid file '/var/lib/rabbitmq/mnesia/rabbit@rabbitmq3.pid' to appear
-rabbitmq-cluster-docker-master-rabbitmq3-1  | pid is 26
-rabbitmq-cluster-docker-master-rabbitmq3-1  | Waiting for erlang distribution on node 'rabbit@rabbitmq3' while OS process '26' is running
+rabbitmq-cluster-docker-master-rabbitmq3-1  | pid is 27
+rabbitmq-cluster-docker-master-rabbitmq3-1  | Waiting for erlang distribution on node 'rabbit@rabbitmq3' while OS process '27' is running
 rabbitmq-cluster-docker-master-rabbitmq3-1  | Waiting for applications 'rabbit_and_plugins' to start on node 'rabbit@rabbitmq3'
 rabbitmq-cluster-docker-master-rabbitmq3-1  | Applications 'rabbit_and_plugins' are running on node 'rabbit@rabbitmq3'
 rabbitmq-cluster-docker-master-rabbitmq3-1  | Stopping rabbit application on node rabbit@rabbitmq3 ...
 rabbitmq-cluster-docker-master-rabbitmq3-1  | Clustering node rabbit@rabbitmq3 with rabbit@rabbitmq1
-rabbitmq-cluster-docker-master-rabbitmq3-1  | The node is already a member of this cluster
 rabbitmq-cluster-docker-master-rabbitmq3-1  | Starting node rabbit@rabbitmq3 ...
 rabbitmq-cluster-docker-master-rabbitmq2-1  | Starting RabbitMQ Server For host:  rabbitmq2
 rabbitmq-cluster-docker-master-rabbitmq2-1  | Waiting for pid file '/var/lib/rabbitmq/mnesia/rabbit@rabbitmq2.pid' to appear
-rabbitmq-cluster-docker-master-rabbitmq2-1  | pid is 27
-rabbitmq-cluster-docker-master-rabbitmq2-1  | Waiting for erlang distribution on node 'rabbit@rabbitmq2' while OS process '27' is running
+rabbitmq-cluster-docker-master-rabbitmq2-1  | pid is 28
+rabbitmq-cluster-docker-master-rabbitmq2-1  | Waiting for erlang distribution on node 'rabbit@rabbitmq2' while OS process '28' is running
 rabbitmq-cluster-docker-master-rabbitmq2-1  | Waiting for applications 'rabbit_and_plugins' to start on node 'rabbit@rabbitmq2'
 rabbitmq-cluster-docker-master-rabbitmq2-1  | Applications 'rabbit_and_plugins' are running on node 'rabbit@rabbitmq2'
 rabbitmq-cluster-docker-master-rabbitmq2-1  | Stopping rabbit application on node rabbit@rabbitmq2 ...
 rabbitmq-cluster-docker-master-rabbitmq2-1  | Clustering node rabbit@rabbitmq2 with rabbit@rabbitmq1
-rabbitmq-cluster-docker-master-rabbitmq2-1  | The node is already a member of this cluster
 rabbitmq-cluster-docker-master-rabbitmq2-1  | Starting node rabbit@rabbitmq2 ...
-rabbitmq-cluster-docker-master-haproxy-1    | <7>haproxy-systemd-wrapper: executing /usr/local/sbin/haproxy -p /run/haproxy.pid -db -f /usr/local/etc/haproxy/haproxy.cfg -Ds 
 rabbitmq-cluster-docker-master-rabbitmq1-1  | Starting RabbitMQ Server For host:  rabbitmq1
 rabbitmq-cluster-docker-master-rabbitmq1-1  | Waiting for pid file '/var/lib/rabbitmq/mnesia/rabbit@rabbitmq1.pid' to appear
-rabbitmq-cluster-docker-master-rabbitmq1-1  | pid is 24
-rabbitmq-cluster-docker-master-rabbitmq1-1  | Waiting for erlang distribution on node 'rabbit@rabbitmq1' while OS process '24' is running
+rabbitmq-cluster-docker-master-rabbitmq1-1  | pid is 23
+rabbitmq-cluster-docker-master-rabbitmq1-1  | Waiting for erlang distribution on node 'rabbit@rabbitmq1' while OS process '23' is running
 rabbitmq-cluster-docker-master-rabbitmq1-1  | Waiting for applications 'rabbit_and_plugins' to start on node 'rabbit@rabbitmq1'
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:41.008455+00:00 [notice] <0.44.0> Application syslog exited with reason: stopped
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:41.035261+00:00 [notice] <0.230.0> Logging: switching to configured handler(s); following messages may not be visible in this log output
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:41.036174+00:00 [notice] <0.230.0> Logging: configured log handlers are now ACTIVE
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.309044+00:00 [info] <0.230.0> ra: starting system quorum_queues
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.315929+00:00 [info] <0.230.0> starting Ra system: quorum_queues in directory: /var/lib/rabbitmq/mnesia/rabbit@rabbitmq1/quorum/rabbit@rabbitmq1
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.365314+00:00 [info] <0.347.0> ra system 'quorum_queues' running pre init for 0 registered servers
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.394581+00:00 [info] <0.348.0> ra: meta data store initialised for system quorum_queues. 0 record(s) recovered
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.438400+00:00 [notice] <0.357.0> WAL: ra_log_wal init, open tbls: ra_log_open_mem_tables, closed tbls: ra_log_closed_mem_tables
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.461515+00:00 [info] <0.230.0> ra: starting system coordination
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.461634+00:00 [info] <0.230.0> starting Ra system: coordination in directory: /var/lib/rabbitmq/mnesia/rabbit@rabbitmq1/coordination/rabbit@rabbitmq1
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.464645+00:00 [info] <0.364.0> ra system 'coordination' running pre init for 0 registered servers
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.469623+00:00 [info] <0.365.0> ra: meta data store initialised for system coordination. 0 record(s) recovered
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.469869+00:00 [notice] <0.371.0> WAL: ra_coordination_log_wal init, open tbls: ra_coordination_log_open_mem_tables, closed tbls: ra_coordination_log_closed_mem_tables
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.480186+00:00 [info] <0.230.0> 
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.480186+00:00 [info] <0.230.0>  Starting RabbitMQ 3.12.4 on Erlang 25.3.2.6 [jit]
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.480186+00:00 [info] <0.230.0>  Copyright (c) 2007-2023 VMware, Inc. or its affiliates.
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.480186+00:00 [info] <0.230.0>  Licensed under the MPL 2.0. Website: https://rabbitmq.com
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:01.070678+00:00 [notice] <0.44.0> Application syslog exited with reason: stopped
+rabbitmq-cluster-docker-master-haproxy-1    | <7>haproxy-systemd-wrapper: executing /usr/local/sbin/haproxy -p /run/haproxy.pid -db -f /usr/local/etc/haproxy/haproxy.cfg -Ds 
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:01.094182+00:00 [notice] <0.230.0> Logging: switching to configured handler(s); following messages may not be visible in this log output
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:01.095625+00:00 [notice] <0.230.0> Logging: configured log handlers are now ACTIVE
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:01.802346+00:00 [info] <0.230.0> ra: starting system quorum_queues
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:01.802765+00:00 [info] <0.230.0> starting Ra system: quorum_queues in directory: /var/lib/rabbitmq/mnesia/rabbit@rabbitmq1/quorum/rabbit@rabbitmq1
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.006439+00:00 [info] <0.303.0> ra system 'quorum_queues' running pre init for 0 registered servers
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.038338+00:00 [info] <0.304.0> ra: meta data store initialised for system quorum_queues. 0 record(s) recovered
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.080236+00:00 [notice] <0.310.0> WAL: ra_log_wal init, open tbls: ra_log_open_mem_tables, closed tbls: ra_log_closed_mem_tables
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.102621+00:00 [info] <0.230.0> ra: starting system coordination
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.103132+00:00 [info] <0.230.0> starting Ra system: coordination in directory: /var/lib/rabbitmq/mnesia/rabbit@rabbitmq1/coordination/rabbit@rabbitmq1
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.108926+00:00 [info] <0.317.0> ra system 'coordination' running pre init for 0 registered servers
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.117354+00:00 [info] <0.318.0> ra: meta data store initialised for system coordination. 0 record(s) recovered
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.117737+00:00 [notice] <0.323.0> WAL: ra_coordination_log_wal init, open tbls: ra_coordination_log_open_mem_tables, closed tbls: ra_coordination_log_closed_mem_tables
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.125172+00:00 [info] <0.230.0> 
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.125172+00:00 [info] <0.230.0>  Starting RabbitMQ 3.12.4 on Erlang 25.3.2.6 [jit]
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.125172+00:00 [info] <0.230.0>  Copyright (c) 2007-2023 VMware, Inc. or its affiliates.
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.125172+00:00 [info] <0.230.0>  Licensed under the MPL 2.0. Website: https://rabbitmq.com
 rabbitmq-cluster-docker-master-rabbitmq1-1  | 
 rabbitmq-cluster-docker-master-rabbitmq1-1  |   ##  ##      RabbitMQ 3.12.4
 rabbitmq-cluster-docker-master-rabbitmq1-1  |   ##  ##
@@ -808,149 +820,167 @@ rabbitmq-cluster-docker-master-rabbitmq1-1  |   Logs: <stdout>
 rabbitmq-cluster-docker-master-rabbitmq1-1  | 
 rabbitmq-cluster-docker-master-rabbitmq1-1  |   Config file(s): /etc/rabbitmq/conf.d/10-defaults.conf
 rabbitmq-cluster-docker-master-rabbitmq1-1  | 
-rabbitmq-cluster-docker-master-rabbitmq1-1  |   Starting broker...2024-02-08 16:07:42.513031+00:00 [info] <0.230.0> 
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.513031+00:00 [info] <0.230.0>  node           : rabbit@rabbitmq1
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.513031+00:00 [info] <0.230.0>  home dir       : /var/lib/rabbitmq
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.513031+00:00 [info] <0.230.0>  config file(s) : /etc/rabbitmq/conf.d/10-defaults.conf
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.513031+00:00 [info] <0.230.0>  cookie hash    : gnzLDuqKcGxMNKFokfhOew==
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.513031+00:00 [info] <0.230.0>  log(s)         : <stdout>
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:42.513031+00:00 [info] <0.230.0>  data dir       : /var/lib/rabbitmq/mnesia/rabbit@rabbitmq1
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.033448+00:00 [info] <0.230.0> Running boot step pre_boot defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.035253+00:00 [info] <0.230.0> Running boot step rabbit_global_counters defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.038781+00:00 [info] <0.230.0> Running boot step rabbit_osiris_metrics defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.038989+00:00 [info] <0.230.0> Running boot step rabbit_core_metrics defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.039678+00:00 [info] <0.230.0> Running boot step rabbit_alarm defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.081946+00:00 [info] <0.564.0> Memory high watermark set to 381 MiB (400479027 bytes) of 954 MiB (1001197568 bytes) total
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.104995+00:00 [info] <0.567.0> Enabling free disk space monitoring (disk free space: 5079343104, total memory: 1001197568)
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.105103+00:00 [info] <0.567.0> Disk free limit set to 50MB
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.110364+00:00 [info] <0.230.0> Running boot step code_server_cache defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.110515+00:00 [info] <0.230.0> Running boot step file_handle_cache defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.110866+00:00 [info] <0.570.0> Limiting to approx 1048479 file handles (943629 sockets)
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.111138+00:00 [info] <0.571.0> FHC read buffering: OFF
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.111221+00:00 [info] <0.571.0> FHC write buffering: ON
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.113483+00:00 [info] <0.230.0> Running boot step worker_pool defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.113639+00:00 [info] <0.373.0> Will use 2 processes for default worker pool
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.113707+00:00 [info] <0.373.0> Starting worker pool 'worker_pool' with 2 processes in it
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.114689+00:00 [info] <0.230.0> Running boot step database defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.180550+00:00 [info] <0.230.0> Waiting for Mnesia tables for 30000 ms, 9 retries left
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.180757+00:00 [info] <0.230.0> Successfully synced tables from a peer
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.180854+00:00 [info] <0.230.0> Waiting for Mnesia tables for 30000 ms, 9 retries left
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.181049+00:00 [info] <0.230.0> Successfully synced tables from a peer
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.226197+00:00 [info] <0.230.0> Waiting for Mnesia tables for 30000 ms, 9 retries left
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.226428+00:00 [info] <0.230.0> Successfully synced tables from a peer
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.226497+00:00 [info] <0.230.0> Peer discovery backend rabbit_peer_discovery_classic_config does not support registration, skipping registration.
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.226739+00:00 [info] <0.230.0> Running boot step tracking_metadata_store defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.226867+00:00 [info] <0.592.0> Setting up a table for connection tracking on this node: tracked_connection
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.226976+00:00 [info] <0.592.0> Setting up a table for per-vhost connection counting on this node: tracked_connection_per_vhost
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.227130+00:00 [info] <0.592.0> Setting up a table for per-user connection counting on this node: tracked_connection_per_user
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.227285+00:00 [info] <0.592.0> Setting up a table for channel tracking on this node: tracked_channel
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.227473+00:00 [info] <0.592.0> Setting up a table for channel tracking on this node: tracked_channel_per_user
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.227582+00:00 [info] <0.230.0> Running boot step networking_metadata_store defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.227762+00:00 [info] <0.230.0> Running boot step feature_flags defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.228837+00:00 [info] <0.230.0> Running boot step codec_correctness_check defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.228916+00:00 [info] <0.230.0> Running boot step external_infrastructure defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.229058+00:00 [info] <0.230.0> Running boot step rabbit_event defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.229281+00:00 [info] <0.230.0> Running boot step rabbit_registry defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.229399+00:00 [info] <0.230.0> Running boot step rabbit_auth_mechanism_amqplain defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.229515+00:00 [info] <0.230.0> Running boot step rabbit_auth_mechanism_cr_demo defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.229629+00:00 [info] <0.230.0> Running boot step rabbit_auth_mechanism_plain defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.229745+00:00 [info] <0.230.0> Running boot step rabbit_exchange_type_direct defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.229859+00:00 [info] <0.230.0> Running boot step rabbit_exchange_type_fanout defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.229984+00:00 [info] <0.230.0> Running boot step rabbit_exchange_type_headers defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.230087+00:00 [info] <0.230.0> Running boot step rabbit_exchange_type_topic defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.230189+00:00 [info] <0.230.0> Running boot step rabbit_mirror_queue_mode_all defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.230281+00:00 [info] <0.230.0> Running boot step rabbit_mirror_queue_mode_exactly defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.230385+00:00 [info] <0.230.0> Running boot step rabbit_mirror_queue_mode_nodes defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.230484+00:00 [info] <0.230.0> Running boot step rabbit_priority_queue defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.230544+00:00 [info] <0.230.0> Priority queues enabled, real BQ is rabbit_variable_queue
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.230978+00:00 [info] <0.230.0> Running boot step rabbit_queue_location_client_local defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.231112+00:00 [info] <0.230.0> Running boot step rabbit_queue_location_min_masters defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.231232+00:00 [info] <0.230.0> Running boot step rabbit_queue_location_random defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.231415+00:00 [info] <0.230.0> Running boot step kernel_ready defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.231523+00:00 [info] <0.230.0> Running boot step rabbit_sysmon_minder defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.232113+00:00 [info] <0.230.0> Running boot step rabbit_epmd_monitor defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.237556+00:00 [info] <0.600.0> epmd monitor knows us, inter-node communication (distribution) port: 25672
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.237778+00:00 [info] <0.230.0> Running boot step guid_generator defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.243843+00:00 [info] <0.230.0> Running boot step rabbit_node_monitor defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.247075+00:00 [info] <0.605.0> Starting rabbit_node_monitor
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.247289+00:00 [info] <0.230.0> Running boot step delegate_sup defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.248297+00:00 [info] <0.230.0> Running boot step rabbit_memory_monitor defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.248576+00:00 [info] <0.230.0> Running boot step rabbit_fifo_dlx_sup defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.248917+00:00 [info] <0.230.0> Running boot step core_initialized defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.249009+00:00 [info] <0.230.0> Running boot step rabbit_channel_tracking_handler defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.249189+00:00 [info] <0.230.0> Running boot step rabbit_connection_tracking_handler defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.249277+00:00 [info] <0.230.0> Running boot step rabbit_definitions_hashing defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.249442+00:00 [info] <0.230.0> Running boot step rabbit_exchange_parameters defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.252217+00:00 [info] <0.230.0> Running boot step rabbit_mirror_queue_misc defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.252972+00:00 [info] <0.230.0> Running boot step rabbit_policies defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.253630+00:00 [info] <0.230.0> Running boot step rabbit_policy defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.253723+00:00 [info] <0.230.0> Running boot step rabbit_queue_location_validator defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.253833+00:00 [info] <0.230.0> Running boot step rabbit_quorum_memory_manager defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.253958+00:00 [info] <0.230.0> Running boot step rabbit_stream_coordinator defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.254223+00:00 [info] <0.230.0> Running boot step rabbit_vhost_limit defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.254400+00:00 [info] <0.230.0> Running boot step rabbit_mgmt_reset_handler defined by app rabbitmq_management
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.254556+00:00 [info] <0.230.0> Running boot step rabbit_mgmt_db_handler defined by app rabbitmq_management_agent
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.255241+00:00 [info] <0.230.0> Management plugin: using rates mode 'basic'
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.260365+00:00 [info] <0.230.0> Running boot step recovery defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.262777+00:00 [info] <0.646.0> Making sure data directory '/var/lib/rabbitmq/mnesia/rabbit@rabbitmq1/msg_stores/vhosts/628WB79CIFDYO9LJI6DKMI09L' for vhost '/' exists
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.275150+00:00 [info] <0.646.0> Starting message stores for vhost '/'
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.275775+00:00 [info] <0.656.0> Message store "628WB79CIFDYO9LJI6DKMI09L/msg_store_transient": using rabbit_msg_store_ets_index to provide index
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.281923+00:00 [info] <0.646.0> Started message store of type transient for vhost '/'
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.282417+00:00 [info] <0.660.0> Message store "628WB79CIFDYO9LJI6DKMI09L/msg_store_persistent": using rabbit_msg_store_ets_index to provide index
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.285007+00:00 [warning] <0.660.0> Message store "628WB79CIFDYO9LJI6DKMI09L/msg_store_persistent": rebuilding indices from scratch
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.288269+00:00 [info] <0.646.0> Started message store of type persistent for vhost '/'
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.288848+00:00 [info] <0.646.0> Recovering 0 queues of type rabbit_classic_queue took 22ms
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.288976+00:00 [info] <0.646.0> Recovering 0 queues of type rabbit_quorum_queue took 0ms
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.289341+00:00 [info] <0.646.0> Recovering 0 queues of type rabbit_stream_queue took 0ms
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.306757+00:00 [info] <0.230.0> Running boot step empty_db_check defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.306887+00:00 [info] <0.230.0> Will not seed default virtual host and user: have definitions to load...
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.307023+00:00 [info] <0.230.0> Running boot step rabbit_observer_cli defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.307218+00:00 [info] <0.230.0> Running boot step rabbit_looking_glass defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.307315+00:00 [info] <0.230.0> Running boot step rabbit_core_metrics_gc defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.307944+00:00 [info] <0.230.0> Running boot step background_gc defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.308360+00:00 [info] <0.230.0> Running boot step routing_ready defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.308439+00:00 [info] <0.230.0> Running boot step pre_flight defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.308728+00:00 [info] <0.230.0> Running boot step notify_cluster defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.308885+00:00 [info] <0.230.0> Running boot step networking defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.309051+00:00 [info] <0.230.0> Running boot step definition_import_worker_pool defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.310457+00:00 [info] <0.605.0> rabbit on node rabbit@rabbitmq3 up
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.310902+00:00 [info] <0.373.0> Starting worker pool 'definition_import_pool' with 2 processes in it
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.311478+00:00 [info] <0.230.0> Running boot step cluster_name defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.311558+00:00 [info] <0.230.0> Running boot step direct_client defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.312021+00:00 [info] <0.230.0> Running boot step rabbit_maintenance_mode_state defined by app rabbit
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.312089+00:00 [info] <0.230.0> Creating table rabbit_node_maintenance_states for maintenance mode status
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.320177+00:00 [info] <0.230.0> Running boot step rabbit_management_load_definitions defined by app rabbitmq_management
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.321020+00:00 [info] <0.696.0> Resetting node maintenance status
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.404720+00:00 [info] <0.605.0> rabbit on node rabbit@rabbitmq2 up
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.418540+00:00 [info] <0.605.0> rabbit on node rabbit@rabbitmq3 up
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.449732+00:00 [info] <0.759.0> Management plugin: HTTP (non-TLS) listener started on port 15672
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.449931+00:00 [info] <0.788.0> Statistics database started.
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.450125+00:00 [info] <0.787.0> Starting worker pool 'management_worker_pool' with 3 processes in it
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.479425+00:00 [info] <0.803.0> Prometheus metrics: HTTP (non-TLS) listener started on port 15692
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.480108+00:00 [info] <0.696.0> Ready to start client connection listeners
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.483777+00:00 [info] <0.847.0> started TCP listener on [::]:5672
+rabbitmq-cluster-docker-master-rabbitmq1-1  |   Starting broker...2024-02-08 16:45:02.158079+00:00 [info] <0.230.0> 
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.158079+00:00 [info] <0.230.0>  node           : rabbit@rabbitmq1
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.158079+00:00 [info] <0.230.0>  home dir       : /var/lib/rabbitmq
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.158079+00:00 [info] <0.230.0>  config file(s) : /etc/rabbitmq/conf.d/10-defaults.conf
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.158079+00:00 [info] <0.230.0>  cookie hash    : gnzLDuqKcGxMNKFokfhOew==
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.158079+00:00 [info] <0.230.0>  log(s)         : <stdout>
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:02.158079+00:00 [info] <0.230.0>  data dir       : /var/lib/rabbitmq/mnesia/rabbit@rabbitmq1
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.286970+00:00 [info] <0.230.0> Running boot step pre_boot defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.287092+00:00 [info] <0.230.0> Running boot step rabbit_global_counters defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.287492+00:00 [info] <0.230.0> Running boot step rabbit_osiris_metrics defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.287670+00:00 [info] <0.230.0> Running boot step rabbit_core_metrics defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.288373+00:00 [info] <0.230.0> Running boot step rabbit_alarm defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.320241+00:00 [info] <0.450.0> Memory high watermark set to 381 MiB (400479027 bytes) of 954 MiB (1001197568 bytes) total
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.337294+00:00 [info] <0.452.0> Enabling free disk space monitoring (disk free space: 5079187456, total memory: 1001197568)
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.337420+00:00 [info] <0.452.0> Disk free limit set to 50MB
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.341791+00:00 [info] <0.230.0> Running boot step code_server_cache defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.342010+00:00 [info] <0.230.0> Running boot step file_handle_cache defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.342341+00:00 [info] <0.455.0> Limiting to approx 1048479 file handles (943629 sockets)
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.342560+00:00 [info] <0.456.0> FHC read buffering: OFF
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.342641+00:00 [info] <0.456.0> FHC write buffering: ON
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.347450+00:00 [info] <0.230.0> Running boot step worker_pool defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.347668+00:00 [info] <0.325.0> Will use 2 processes for default worker pool
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.347743+00:00 [info] <0.325.0> Starting worker pool 'worker_pool' with 2 processes in it
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.348182+00:00 [info] <0.230.0> Running boot step database defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.350339+00:00 [info] <0.230.0> Node database directory at /var/lib/rabbitmq/mnesia/rabbit@rabbitmq1 is empty. Assuming we need to join an existing cluster or initialise from scratch...
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.350452+00:00 [info] <0.230.0> Configured peer discovery backend: rabbit_peer_discovery_classic_config
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.350599+00:00 [info] <0.230.0> Will try to lock with peer discovery backend rabbit_peer_discovery_classic_config
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.350762+00:00 [info] <0.230.0> All discovered existing cluster peers:
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.350812+00:00 [info] <0.230.0> Discovered no peer nodes to cluster with. Some discovery backends can filter nodes out based on a readiness criteria. Enabling debug logging might help troubleshoot.
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.354117+00:00 [notice] <0.44.0> Application mnesia exited with reason: stopped
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.588808+00:00 [info] <0.230.0> Waiting for Mnesia tables for 30000 ms, 9 retries left
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.589005+00:00 [info] <0.230.0> Successfully synced tables from a peer
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.590570+00:00 [notice] <0.326.0> Feature flags: attempt to enable `stream_sac_coordinator_unblock_group`...
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.666766+00:00 [notice] <0.326.0> Feature flags: `stream_sac_coordinator_unblock_group` enabled
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.667038+00:00 [notice] <0.326.0> Feature flags: attempt to enable `restart_streams`...
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.740189+00:00 [notice] <0.326.0> Feature flags: `restart_streams` enabled
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.740556+00:00 [info] <0.230.0> Waiting for Mnesia tables for 30000 ms, 9 retries left
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.748872+00:00 [info] <0.230.0> Successfully synced tables from a peer
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.760958+00:00 [info] <0.230.0> Waiting for Mnesia tables for 30000 ms, 9 retries left
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.761220+00:00 [info] <0.230.0> Successfully synced tables from a peer
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.761659+00:00 [info] <0.230.0> Peer discovery backend rabbit_peer_discovery_classic_config does not support registration, skipping registration.
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.761785+00:00 [info] <0.230.0> Will try to unlock with peer discovery backend rabbit_peer_discovery_classic_config
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.762081+00:00 [info] <0.230.0> Running boot step tracking_metadata_store defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.762285+00:00 [info] <0.635.0> Setting up a table for connection tracking on this node: tracked_connection
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.762379+00:00 [info] <0.635.0> Setting up a table for per-vhost connection counting on this node: tracked_connection_per_vhost
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.762561+00:00 [info] <0.635.0> Setting up a table for per-user connection counting on this node: tracked_connection_per_user
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.762682+00:00 [info] <0.635.0> Setting up a table for channel tracking on this node: tracked_channel
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.762803+00:00 [info] <0.635.0> Setting up a table for channel tracking on this node: tracked_channel_per_user
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.762948+00:00 [info] <0.230.0> Running boot step networking_metadata_store defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.763099+00:00 [info] <0.230.0> Running boot step feature_flags defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.764111+00:00 [info] <0.230.0> Running boot step codec_correctness_check defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.764206+00:00 [info] <0.230.0> Running boot step external_infrastructure defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.764315+00:00 [info] <0.230.0> Running boot step rabbit_event defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.764515+00:00 [info] <0.230.0> Running boot step rabbit_registry defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.764624+00:00 [info] <0.230.0> Running boot step rabbit_auth_mechanism_amqplain defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.764750+00:00 [info] <0.230.0> Running boot step rabbit_auth_mechanism_cr_demo defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.764873+00:00 [info] <0.230.0> Running boot step rabbit_auth_mechanism_plain defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.764968+00:00 [info] <0.230.0> Running boot step rabbit_exchange_type_direct defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.765048+00:00 [info] <0.230.0> Running boot step rabbit_exchange_type_fanout defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.765122+00:00 [info] <0.230.0> Running boot step rabbit_exchange_type_headers defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.765229+00:00 [info] <0.230.0> Running boot step rabbit_exchange_type_topic defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.765313+00:00 [info] <0.230.0> Running boot step rabbit_mirror_queue_mode_all defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.765392+00:00 [info] <0.230.0> Running boot step rabbit_mirror_queue_mode_exactly defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.765471+00:00 [info] <0.230.0> Running boot step rabbit_mirror_queue_mode_nodes defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.765549+00:00 [info] <0.230.0> Running boot step rabbit_priority_queue defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.765611+00:00 [info] <0.230.0> Priority queues enabled, real BQ is rabbit_variable_queue
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.765702+00:00 [info] <0.230.0> Running boot step rabbit_queue_location_client_local defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.765785+00:00 [info] <0.230.0> Running boot step rabbit_queue_location_min_masters defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.765864+00:00 [info] <0.230.0> Running boot step rabbit_queue_location_random defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.765954+00:00 [info] <0.230.0> Running boot step kernel_ready defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.766009+00:00 [info] <0.230.0> Running boot step rabbit_sysmon_minder defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.766414+00:00 [info] <0.230.0> Running boot step rabbit_epmd_monitor defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.771250+00:00 [info] <0.643.0> epmd monitor knows us, inter-node communication (distribution) port: 25672
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.771443+00:00 [info] <0.230.0> Running boot step guid_generator defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.778879+00:00 [info] <0.230.0> Running boot step rabbit_node_monitor defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.779238+00:00 [info] <0.647.0> Starting rabbit_node_monitor
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.779536+00:00 [info] <0.230.0> Running boot step delegate_sup defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.780450+00:00 [info] <0.230.0> Running boot step rabbit_memory_monitor defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.783532+00:00 [info] <0.230.0> Running boot step rabbit_fifo_dlx_sup defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.783743+00:00 [info] <0.230.0> Running boot step core_initialized defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.783795+00:00 [info] <0.230.0> Running boot step rabbit_channel_tracking_handler defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.784192+00:00 [info] <0.230.0> Running boot step rabbit_connection_tracking_handler defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.784374+00:00 [info] <0.230.0> Running boot step rabbit_definitions_hashing defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.784583+00:00 [info] <0.230.0> Running boot step rabbit_exchange_parameters defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.785107+00:00 [info] <0.230.0> Running boot step rabbit_mirror_queue_misc defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.785731+00:00 [info] <0.230.0> Running boot step rabbit_policies defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.786336+00:00 [info] <0.230.0> Running boot step rabbit_policy defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.786459+00:00 [info] <0.230.0> Running boot step rabbit_queue_location_validator defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.786671+00:00 [info] <0.230.0> Running boot step rabbit_quorum_memory_manager defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.786871+00:00 [info] <0.230.0> Running boot step rabbit_stream_coordinator defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.787325+00:00 [info] <0.230.0> Running boot step rabbit_vhost_limit defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.787437+00:00 [info] <0.230.0> Running boot step rabbit_mgmt_reset_handler defined by app rabbitmq_management
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.787554+00:00 [info] <0.230.0> Running boot step rabbit_mgmt_db_handler defined by app rabbitmq_management_agent
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.787622+00:00 [info] <0.230.0> Management plugin: using rates mode 'basic'
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.788514+00:00 [info] <0.230.0> Running boot step recovery defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.795380+00:00 [info] <0.230.0> Running boot step empty_db_check defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.795483+00:00 [info] <0.230.0> Will seed default virtual host and user...
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.795678+00:00 [info] <0.230.0> Adding vhost '/' (description: 'Default virtual host', tags: [])
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.803780+00:00 [info] <0.230.0> Inserted a virtual host record {vhost,<<"/">>,[],
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.803780+00:00 [info] <0.230.0>                                       #{description =>
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.803780+00:00 [info] <0.230.0>                                             <<"Default virtual host">>,
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.803780+00:00 [info] <0.230.0>                                         tags => []}}
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.827544+00:00 [info] <0.693.0> Making sure data directory '/var/lib/rabbitmq/mnesia/rabbit@rabbitmq1/msg_stores/vhosts/628WB79CIFDYO9LJI6DKMI09L' for vhost '/' exists
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.829272+00:00 [info] <0.693.0> Setting segment_entry_count for vhost '/' with 0 queues to '2048'
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.834839+00:00 [info] <0.693.0> Starting message stores for vhost '/'
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.835479+00:00 [info] <0.703.0> Message store "628WB79CIFDYO9LJI6DKMI09L/msg_store_transient": using rabbit_msg_store_ets_index to provide index
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.842939+00:00 [info] <0.693.0> Started message store of type transient for vhost '/'
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.843783+00:00 [info] <0.707.0> Message store "628WB79CIFDYO9LJI6DKMI09L/msg_store_persistent": using rabbit_msg_store_ets_index to provide index
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.845620+00:00 [warning] <0.707.0> Message store "628WB79CIFDYO9LJI6DKMI09L/msg_store_persistent": rebuilding indices from scratch
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.847483+00:00 [info] <0.693.0> Started message store of type persistent for vhost '/'
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.848020+00:00 [info] <0.693.0> Recovering 0 queues of type rabbit_classic_queue took 17ms
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.848094+00:00 [info] <0.693.0> Recovering 0 queues of type rabbit_quorum_queue took 0ms
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.848197+00:00 [info] <0.693.0> Recovering 0 queues of type rabbit_stream_queue took 0ms
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.854652+00:00 [info] <0.230.0> Created user 'guest'
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.857078+00:00 [info] <0.230.0> Successfully set user tags for user 'guest' to [administrator]
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.859754+00:00 [info] <0.230.0> Successfully set permissions for user 'guest' in virtual host '/' to '.*', '.*', '.*'
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.859905+00:00 [info] <0.230.0> Running boot step rabbit_observer_cli defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.860081+00:00 [info] <0.230.0> Running boot step rabbit_looking_glass defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.860342+00:00 [info] <0.230.0> Running boot step rabbit_core_metrics_gc defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.860685+00:00 [info] <0.230.0> Running boot step background_gc defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.861161+00:00 [info] <0.230.0> Running boot step routing_ready defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.861229+00:00 [info] <0.230.0> Running boot step pre_flight defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.861329+00:00 [info] <0.230.0> Running boot step notify_cluster defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.861426+00:00 [info] <0.230.0> Running boot step networking defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.861512+00:00 [info] <0.230.0> Running boot step definition_import_worker_pool defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.861974+00:00 [info] <0.325.0> Starting worker pool 'definition_import_pool' with 2 processes in it
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.863405+00:00 [info] <0.230.0> Running boot step cluster_name defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.863601+00:00 [info] <0.230.0> Initialising internal cluster ID to 'rabbitmq-cluster-id-FlwD4wkndVrneka2UJA3fw'
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.868475+00:00 [info] <0.230.0> Running boot step direct_client defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.868729+00:00 [info] <0.230.0> Running boot step rabbit_maintenance_mode_state defined by app rabbit
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.868809+00:00 [info] <0.230.0> Creating table rabbit_node_maintenance_states for maintenance mode status
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.878287+00:00 [info] <0.230.0> Running boot step rabbit_management_load_definitions defined by app rabbitmq_management
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.878615+00:00 [info] <0.745.0> Resetting node maintenance status
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.926444+00:00 [info] <0.805.0> Management plugin: HTTP (non-TLS) listener started on port 15672
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.926712+00:00 [info] <0.833.0> Statistics database started.
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.927003+00:00 [info] <0.832.0> Starting worker pool 'management_worker_pool' with 3 processes in it
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.962409+00:00 [info] <0.847.0> Prometheus metrics: HTTP (non-TLS) listener started on port 15692
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.962893+00:00 [info] <0.745.0> Ready to start client connection listeners
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:13.967930+00:00 [info] <0.891.0> started TCP listener on [::]:5672
 rabbitmq-cluster-docker-master-rabbitmq1-1  |  completed with 4 plugins.
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.857131+00:00 [info] <0.696.0> Server startup complete; 4 plugins started.
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.857131+00:00 [info] <0.696.0>  * rabbitmq_prometheus
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.857131+00:00 [info] <0.696.0>  * rabbitmq_management
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.857131+00:00 [info] <0.696.0>  * rabbitmq_management_agent
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:52.857131+00:00 [info] <0.696.0>  * rabbitmq_web_dispatch
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:14.247947+00:00 [info] <0.745.0> Server startup complete; 4 plugins started.
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:14.247947+00:00 [info] <0.745.0>  * rabbitmq_prometheus
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:14.247947+00:00 [info] <0.745.0>  * rabbitmq_management
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:14.247947+00:00 [info] <0.745.0>  * rabbitmq_management_agent
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:14.247947+00:00 [info] <0.745.0>  * rabbitmq_web_dispatch
 rabbitmq-cluster-docker-master-rabbitmq1-1  | Applications 'rabbit_and_plugins' are running on node 'rabbit@rabbitmq1'
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:53.373650+00:00 [info] <0.605.0> rabbit on node rabbit@rabbitmq2 up
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:07:59.879907+00:00 [info] <0.605.0> rabbit on node rabbit@rabbitmq3 down
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:08:00.247568+00:00 [info] <0.605.0> rabbit on node rabbit@rabbitmq2 down
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:08:04.013549+00:00 [info] <0.605.0> rabbit on node rabbit@rabbitmq3 up
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:08:04.540154+00:00 [info] <0.605.0> rabbit on node rabbit@rabbitmq2 up
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:08:38.844670+00:00 [info] <0.984.0> accepting AMQP connection <0.984.0> (172.18.0.5:46668 -> 172.18.0.2:5672)
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:08:38.850059+00:00 [error] <0.984.0> Error on AMQP connection <0.984.0> (172.18.0.5:46668 -> 172.18.0.2:5672, state: starting):
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:08:38.850059+00:00 [error] <0.984.0> PLAIN login refused: user 'username' - invalid credentials
-rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:08:38.859471+00:00 [info] <0.984.0> closing AMQP connection <0.984.0> (172.18.0.5:46668 -> 172.18.0.2:5672)
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:22.642422+00:00 [info] <0.647.0> node rabbit@rabbitmq3 up
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:22.645898+00:00 [info] <0.647.0> node rabbit@rabbitmq2 up
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:25.776475+00:00 [info] <0.1221.0> accepting AMQP connection <0.1221.0> (172.19.0.5:38908 -> 172.19.0.2:5672)
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:25.781591+00:00 [info] <0.1221.0> connection <0.1221.0> (172.19.0.5:38908 -> 172.19.0.2:5672): user 'guest' authenticated and granted access to vhost '/'
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:25.798451+00:00 [warning] <0.1221.0> closing AMQP connection <0.1221.0> (172.19.0.5:38908 -> 172.19.0.2:5672, vhost: '/', user: 'guest'):
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:25.798451+00:00 [warning] <0.1221.0> client unexpectedly closed TCP connection
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:26.495448+00:00 [info] <0.647.0> rabbit on node rabbit@rabbitmq3 up
+rabbitmq-cluster-docker-master-rabbitmq1-1  | 2024-02-08 16:45:26.783542+00:00 [info] <0.647.0> rabbit on node rabbit@rabbitmq2 up
 ```
 
 </details>
 
 ```console
-PLAIN login refused: user 'username' - invalid credentials
+[warning] <0.1221.0> closing AMQP connection <0.1221.0> (172.19.0.5:38908 -> 172.19.0.2:5672, vhost: '/', user: 'guest'):
+[warning] <0.1221.0> client unexpectedly closed TCP connection
 ```
 
 `cat consumer.py`  
@@ -971,15 +1001,55 @@ RABBITMQ_DEFAULT_PASS=guest
 RABBITMQ_DEFAULT_VHOST=/
 ```
 
-##### Yes, authentication variables are different. Let's fix it by export vars and restart docker containers.
+##### Yes, it is. Authentication variables are different. Let's fix it by export vars and restarting docker containers.
 
 
 #### 5. Export vars and restart containers
 `export RABBITMQ_DEFAULT_USER=username ; export RABBITMQ_DEFAULT_PASS=password ; docker compose stop && docker compose down && docker compose up -d`  
+```console
+[+] Stopping 4/4
+ ✔ Container rabbitmq-cluster-docker-master-haproxy-1    Stopped                                                                                                                                          10.3s 
+ ✔ Container rabbitmq-cluster-docker-master-rabbitmq3-1  Stopped                                                                                                                                          10.4s 
+ ✔ Container rabbitmq-cluster-docker-master-rabbitmq2-1  Stopped                                                                                                                                          10.4s 
+ ✔ Container rabbitmq-cluster-docker-master-rabbitmq1-1  Stopped                                                                                                                                          10.3s 
+[+] Running 5/5
+ ✔ Container rabbitmq-cluster-docker-master-haproxy-1    Removed                                                                                                                                           0.0s 
+ ✔ Container rabbitmq-cluster-docker-master-rabbitmq3-1  Removed                                                                                                                                           0.0s 
+ ✔ Container rabbitmq-cluster-docker-master-rabbitmq2-1  Removed                                                                                                                                           0.0s 
+ ✔ Container rabbitmq-cluster-docker-master-rabbitmq1-1  Removed                                                                                                                                           0.0s 
+ ✔ Network rabbitmq-cluster-docker-master_default        Removed                                                                                                                                           0.1s 
+[+] Running 5/5
+ ✔ Network rabbitmq-cluster-docker-master_default        Created                                                                                                                                           0.1s 
+ ✔ Container rabbitmq-cluster-docker-master-rabbitmq1-1  Started                                                                                                                                           0.0s 
+ ✔ Container rabbitmq-cluster-docker-master-rabbitmq3-1  Started                                                                                                                                           0.0s 
+ ✔ Container rabbitmq-cluster-docker-master-rabbitmq2-1  Started                                                                                                                                           0.0s 
+ ✔ Container rabbitmq-cluster-docker-master-haproxy-1    Started
+```
 
 
 #### 6. Check sending-receiving message
-`RMQ_USER=username RMQ_PASSWORD=password RMQ_QUEUE=hello python3 ~/producer.py hello-lwc`  
+`python3 ~/producer.py hello-lwc`  
+```console
+Traceback (most recent call last):
+  File "/home/admin/producer.py", line 18, in <module>
+    connection = pika.BlockingConnection(parameters)
+  File "/usr/local/lib/python3.9/dist-packages/pika/adapters/blocking_connection.py", line 360, in __init__
+    self._impl = self._create_connection(parameters, _impl_class)
+  File "/usr/local/lib/python3.9/dist-packages/pika/adapters/blocking_connection.py", line 451, in _create_connection
+    raise self._reap_last_connection_workflow_error(error)
+pika.exceptions.ProbableAuthenticationError: ConnectionClosedByBroker: (403) 'ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile.'
+```
+
+##### Let's check the logs.
+
+`docker compose logs`  
+```console
+[error] <0.1151.0> Error on AMQP connection <0.1151.0> (172.20.0.5:45076 -> 172.20.0.2:5672, state: starting):
+[error] <0.1151.0> PLAIN login refused: user 'guest' - invalid credentials
+```
+
+##### It looks like it's about hard-coded credentials in the `producer.py` script. Let's fix it by export correct vars and trying again.
+`export RMQ_USER=username ; export RMQ_PASSWORD=password ; export RMQ_QUEUE=hello ; python3 ~/producer.py hello-lwc`  
 ```console
 Message sent to RabbitMQ
 ```
@@ -987,4 +1057,16 @@ Message sent to RabbitMQ
 `python3 ~/consumer.py`  
 ```console
 hello-lwc
+```
+
+
+#### 7. Validate the task
+`export RMQ_USER=username ; export RMQ_PASSWORD=password ; export RMQ_QUEUE=hello ; python3 ~/producer.py hello-lwc`  
+```console
+Message sent to RabbitMQ
+```
+
+`bash /home/admin/agent/check.sh`  
+```console
+OK
 ```
