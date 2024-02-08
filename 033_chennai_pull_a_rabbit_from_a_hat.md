@@ -656,3 +656,45 @@ NAME                                       IMAGE         COMMAND                
 rabbitmq-cluster-docker-master-haproxy-1   haproxy:1.7   "docker-entrypoint.sh haproxy -f /usr/local/etc/haproxy/haproxy.cfg"   haproxy   16 minutes ago   Up 16 minutes   0.0.0.0:5672->5672/tcp, :::5672->5672/tcp, 0.0.0.0:15672->15672/tcp, :::15672->15672/tcp
 ```
 
+##### We see that the cluster has not started and we see the error when RMQ cluster was starting
+```console
+tail: cannot open '/var/log/rabbitmq/*.log' for reading: No such file or directory
+tail: no files remaining
+```
+
+##### We can fix the error by creating a missing file, but it doesn't make sense. The comment in `cluster-entrypoint.sh` clearly says that this code `tail -f /var/log/rabbitmq/*.log` is only needed to Keep foreground process active.  
+##### Let's add any additional code to keep the process running. For example, we will use an infinite loop.
+
+
+#### 2. Add infinite loop into the cluster-entrypoint.sh
+`vi cluster-entrypoint.sh`  
+```bash
+#!/bin/bash
+
+set -e
+
+# Change .erlang.cookie permission
+chmod 400 /var/lib/rabbitmq/.erlang.cookie
+
+# Get hostname from enviromant variable
+HOSTNAME=`env hostname`
+echo "Starting RabbitMQ Server For host: " $HOSTNAME
+
+if [ -z "$JOIN_CLUSTER_HOST" ]; then
+    /usr/local/bin/docker-entrypoint.sh rabbitmq-server &
+    sleep 5
+    rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbit\@$HOSTNAME.pid
+else
+    /usr/local/bin/docker-entrypoint.sh rabbitmq-server -detached
+    sleep 5
+    rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbit\@$HOSTNAME.pid
+    rabbitmqctl stop_app
+    rabbitmqctl join_cluster rabbit@$JOIN_CLUSTER_HOST
+    rabbitmqctl start_app
+fi
+
+# Keep foreground process active ...
+while true; do
+  sleep 60
+done
+```
