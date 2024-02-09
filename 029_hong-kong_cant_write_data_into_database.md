@@ -920,7 +920,7 @@ UUID=72C9-F191 /boot/efi vfat defaults 0 0
 /dev/xvdb /opt/pgdata xfs defaults,nofail 0 0
 ```
 
-##### We see some device `/dev/xvdb` that doesn't exist. But we have some unmounted disk, let's check it agian
+##### We see some device `/dev/xvdb` that doesn't exist. But we have an unmounted disk, let's look at it again more closely
 `fdisk -l`  
 ```console
 Disk /dev/nvme0n1: 8 GiB, 8589934592 bytes, 16777216 sectors
@@ -955,7 +955,7 @@ nvme1n1
 ├─nvme1n1p14                                                                  
 └─nvme1n1p15 vfat         72C9-F191                             123.5M     0% /boot/efi
 ```
-##### Yes, we have not mounted disk `nvme0n1` with xfs filesystem. Is it suitable?
+##### Yes, we have not mounted disk `nvme0n1` with `xfs` filesystem. Is it suitable for Postgres data?
 
 `file -s /dev/nvme0n1`  
 ```console
@@ -963,9 +963,6 @@ nvme1n1
 ```
 
 `mount /dev/nvme0n1 /opt/pgdata`  
-```console
-```
-
 `lsblk`  
 ```console
 NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
@@ -998,7 +995,7 @@ tmpfs            233M     0  233M   0% /sys/fs/cgroup
 /dev/nvme1n1p15  124M  278K  124M   1% /boot/efi
 /dev/nvme0n1     8.0G  8.0G   28K 100% /opt/pgdata
 ```
-##### But disk is full, only 28 kb of disk space is available. Let's check it
+##### It is suitable, but disk is full, only 28 kb of disk space is available. Let's check what is taking up disk space
 
 `ls -la /opt/pgdata/`  
 ```console
@@ -1011,7 +1008,7 @@ drwxr-xr-x  3 root     root           4096 May 21  2022 ..
 -rw-r--r--  1 root     root         499712 May 21  2022 file3.bk
 drwx------ 19 postgres postgres       4096 May 21  2022 main
 ```
-##### There are 3 files with `.bk` extention and file with talking name `deleteme`. Let's remove them
+##### There are 3 files with `.bk` extention and one file with talking name `deleteme`. Let's remove them all
 
 `rm /opt/pgdata/file*.bk /opt/pgdata/deleteme`  
 `ls -la`  
@@ -1022,7 +1019,7 @@ drwxr-xr-x  3 root     root     4096 May 21  2022 ..
 drwx------ 19 postgres postgres 4096 May 21  2022 main
 ```
 
-##### Now we can restart Postgre service
+##### Now there is enough free disk space and we can restart the Postgres service
 `systemctl restart postgresql`  
 ```console
 root@ip-172-31-25-11:/# systemctl status postgresql
