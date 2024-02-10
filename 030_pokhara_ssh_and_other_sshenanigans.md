@@ -323,6 +323,32 @@ client@i-073e4be234951cc28:~$
 ```
 ##### Many commands are not deleted :bulb:
 
+`ssh localhost`  
+```console
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the ECDSA key sent by the remote host is
+SHA256:C29xSDd6mjBV6dyxA39lL6Q5MYnXyV3xFH2/Kd1MjGQ.
+Please contact your system administrator.
+Add correct host key in /home/client/.ssh/known_hosts to get rid of this message.
+Offending ECDSA key in /home/client/.ssh/known_hosts:1
+  remove with:
+  ssh-keygen -f "/home/client/.ssh/known_hosts" -R "localhost"
+ECDSA host key for localhost has changed and you have requested strict checking.
+Host key verification failed.
+```
+
+`ssh-keygen -f "/home/client/.ssh/known_hosts" -R "localhost"`  
+```console
+# Host localhost found: line 1
+/home/client/.ssh/known_hosts updated.
+Original contents retained as /home/client/.ssh/known_hosts.old
+```
+
 `ssh client@localhost 'pwd'`  
 ```console
 client@localhost: Permission denied (publickey).
