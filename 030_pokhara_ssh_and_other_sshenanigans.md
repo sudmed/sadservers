@@ -114,7 +114,7 @@ systemd-coredump:x:998:998:systemd Core Dumper:/:/usr/sbin/nologin
 admin:x:1000:1000:Debian:/home/admin:/bin/bash
 client:x:1001:1001::/home/client:/usr/sbin/nologin
 ```
-##### As we can see, for user client `nologin` shell is set. Let's fix it
+##### As we can see, for user `client` no shell is set. Let's fix it
 
 `vi /etc/passwd`  
 ```console
