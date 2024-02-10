@@ -72,6 +72,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQopf1DsoscAMwsWJL1V1F1GHom1+qwkp0QlXnfWP+
 ```console
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQopf1DsoscAMwsWJL1V1F1GHom1+qwkp0QlXnfWP+bKwkXZfTj+IIvtEZ3ECyIQa2bMEFdME9aU67vJoF4X3KSvQQijxr9ng5fWhVxvCauYdVi4UU1NtvHtw7RUj+gIIwcqmOg2/wwhRb7zjN53arsaJu0P77VOhwTRYI0fcUX6iE+W6wNvKRBvnZShSla5pCk0x7Ox2wptYfTnbIOx6+me7g9fkctakm1yeujsRbQjJHwkfdLfYhMJkT4wibLvJSooB5WIe62ioCcFbiHEywMrrdKH8oCy8i8wD28S5vh6FTZiZxBX6nL7HModXQI9RV6mZ9TE/ZovWYCk3Cp0675JoWEM94C53S+5eVtZTj4l2ZsYwmc8WaJiullLYdWEYi2jtmnHxsnFQ/YZ/Tf9zndRBVUPKuG84mGzJ5Fs28w0u5SiNeHdS0OOHvAcGnuoweKigt01JRJdt8DZO+N8jCEM/jo1TST131sy1TLyylY6zBe6ID/uoyWkVLc5/iFhM= client@somehost
 ```
+##### Public ssh key is the same, this is OK.
 
 `su client`  
 ```console
