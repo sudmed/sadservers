@@ -321,8 +321,6 @@ drwxr-xr-x 4 client client 4096 Feb  5  2023 ..
 ##### We can see wrong permitions on private key file `id_rsa`. Let's fix it
 
 `chmod 600 id_rsa`  
-
-
 `ssh client@localhost 'pwd'`  
 ```console
 client@localhost: Permission denied (publickey).
