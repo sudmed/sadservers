@@ -281,7 +281,7 @@ client          hard    nproc           20
 ```console
 client@i-073e4be234951cc28:~$
 ```
-##### OK, it works!
+##### OK, it works! Let's check bash history as user `client`
 
 `history`  
 ```console
@@ -308,6 +308,8 @@ client@i-073e4be234951cc28:~$
    21  whoami 
    22  exit
 ```
+##### Many commands are not deleted :bulb:
+##### And let's check ssh keys
 
 `ls -la ~/.ssh/`  
 ```console
