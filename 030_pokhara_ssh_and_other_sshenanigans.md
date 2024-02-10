@@ -64,12 +64,7 @@ drwxr-xr-x 4 client client 4096 Feb  5  2023 ..
 ```
 ##### We can see wrong permitions on private key file `id_rsa`. Let's fix it
 
-`chmod 600 id_rsa`  
-`ssh client@localhost 'pwd'`  
-```console
-client@localhost: Permission denied (publickey).
-```
-
+`sudo chmod 600 id_rsa`  
 `ls -la /home/client/.ssh/`  
 ```console
 total 24
@@ -327,6 +322,11 @@ client@i-073e4be234951cc28:~$
    22  exit
 ```
 ##### Many commands are not deleted :bulb:
+
+`ssh client@localhost 'pwd'`  
+```console
+client@localhost: Permission denied (publickey).
+```
 
 ##### Seems, the problem is not related to the ssh keys. Let's check sshd config
 
