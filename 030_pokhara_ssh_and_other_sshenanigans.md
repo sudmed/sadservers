@@ -279,7 +279,7 @@ client          hard    nproc           20
 
 `su client`  
 ```console
-client@i-073e4be234951cc28:/root$
+client@i-073e4be234951cc28:~$
 ```
 ##### OK, it works!
 
