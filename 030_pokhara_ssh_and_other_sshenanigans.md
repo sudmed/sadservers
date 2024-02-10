@@ -420,7 +420,7 @@ drwxr-xr-x 4 root root 4096 Feb 10 11:28 ..
 ```console
 DenyUsers client
 ```
-##### This is a clocker! Let's fix it
+##### This is a blocker! Let's delete it
 
 `rm /etc/ssh/sshd_config.d/sad.conf`  
 `systemctl restart ssh`  
