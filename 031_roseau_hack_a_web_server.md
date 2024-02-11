@@ -319,6 +319,7 @@ the credentials required.</p>
 <address>Apache/2.4.54 (Debian) Server at localhost Port 80</address>
 </body></html>
 ```
+##### It's Basic Auth - the simplest type of auth, made by apache module `mod_auth_basic`. Username and password pairs are stored in the `.htpasswd` file. Lets search it
 
 `ls -la /etc/apache2/`  
 ```console
@@ -342,7 +343,8 @@ drwxr-xr-x  2 root root  4096 Feb 13  2023 sites-enabled
 ```console
 carlos:$apr1$b1kyfnHB$yRHwzbuKSMyW62QTnGYCb0
 ```
-##### We have login `carlos` and encrypted password. Let's brutforce it by john-the-ripper
+##### We have login `carlos` and some encrypted password. Let's brutforce it by john-the-ripper tool.
+##### Fast googling by prompt `john the ripper how to crack .htpasswd` says that it is easy-peasy: `john htpasswd`
 
 /home/admin/john/run/john /etc/apache2/.htpasswd``  
 ```console
@@ -363,7 +365,7 @@ chalet           (carlos)
 Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
-##### Fine, the password is `chalet`. Let's check web server with those credentials
+##### Fine, it seems that the password is cracked, and it's `chalet`. Let's check web server with those credentials
 
 `cd /home/admin/`  
 `curl http://carlos:chalet@localhost/webfile`  
