@@ -350,7 +350,7 @@ carlos:$apr1$b1kyfnHB$yRHwzbuKSMyW62QTnGYCb0
 
 <details>
 
-  <summary>`cd ~/john/run/ && ./john --test`</summary>
+  <summary>./john --test</summary>
 
 ```console
 Benchmarking: descrypt, traditional crypt(3) [DES 256/256 AVX2]... (2xOMP) DONE
