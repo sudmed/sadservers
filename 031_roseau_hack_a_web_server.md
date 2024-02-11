@@ -319,7 +319,8 @@ the credentials required.</p>
 <address>Apache/2.4.54 (Debian) Server at localhost Port 80</address>
 </body></html>
 ```
-##### It's Basic Auth - the simplest type of auth, made by apache module `mod_auth_basic`. Username and password pairs are stored in the `.htpasswd` file. Lets search it
+##### It's Basic Auth - the simplest type of auth, made by apache module `mod_auth_basic`. Username and password pairs are stored in the `.htpasswd` file. 
+##### Lets search it
 
 `ls -la /etc/apache2/`  
 ```console
@@ -346,7 +347,7 @@ carlos:$apr1$b1kyfnHB$yRHwzbuKSMyW62QTnGYCb0
 ##### We have login `carlos` and some encrypted password. Let's brutforce it by john-the-ripper tool.
 ##### Fast googling by prompt `john the ripper how to crack .htpasswd` says that it is easy-peasy: `john htpasswd`
 
-/home/admin/john/run/john /etc/apache2/.htpasswd``  
+`/home/admin/john/run/john /etc/apache2/.htpasswd`  
 ```console
 Warning: detected hash type "md5crypt", but the string is also recognized as "md5crypt-long"
 Use the "--format=md5crypt-long" option to force loading these as that type instead
@@ -374,7 +375,7 @@ Warning: Binary output can mess up your terminal. Use "--output -" to tell
 Warning: curl to output it to your terminal anyway, or consider "--output 
 Warning: <FILE>" to save to a file.
 ```
-##### Wweb server want to transfer a file with `--output -` option
+##### Web server want to transfer a file with `--output -` option
 
 `curl http://carlos:chalet@localhost/webfile --output -`  
 ```console
@@ -386,8 +387,7 @@ secret.txtUT    âcâcux
 secret.txtUTâcux
                 PKPq
 ```
-##### Add pipe to file
-
+##### STDOUT says nothing, let's download this file
 
 `curl http://carlos:chalet@localhost/webfile -o - | file -`  
 ```console
@@ -398,7 +398,7 @@ secret.txtUTâcux
 ```
 ##### The curl says that this is `/dev/stdin: Zip archive data`. OK, let's download as zip file
 
-`curl http://carlos:chalet@localhost/webfile -o - > file.zip`  
+`curl http://carlos:chalet@localhost/webfile -o file.zip`  
 ```console
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
@@ -427,14 +427,20 @@ drwxr-xr-x 10 admin admin 4096 Feb 13  2023 john
 Archive:  file.zip
 [file.zip] secret.txt password: 
 ```
-##### It is an encrupted zip archive. John-the-ripper will help us again
+##### It is a password-protected ZIP archive. John-the-ripper will help us again.
+##### Fast googling by prompt `john the ripper how to crack zip archive` says that it is not easy-peasy, but also easy:
+##### A) Convert the ZIP file: John the Ripper requires the ZIP file to be in a certain format for cracking. You can use the zip2john utility provided by John the Ripper to convert the ZIP file. Here's an example of how to use it:
+##### $ zip2john file.zip > hash.txt
+##### B) Crack the password: Now, you can use John the Ripper to crack the converted hash file. Run the following command:
+##### $ john hash.txt
+##### John the Ripper will start its password cracking process, trying different combinations until it finds the correct password. The time it takes to crack the password depends on the complexity of the password and the system's computational resources.
 
-`john/run/zip2john file.zip > zip.hashes`  
+`john/run/zip2john file.zip > hash.txt`  
 ```console
 ver 1.0 efh 5455 efh 7875 file.zip/secret.txt PKZIP Encr: 2b chk, TS_chk, cmplen=29, decmplen=17, crc=AAC6E9AF ts=14E0 cs=14e0 type=0
 ```
 
-`john/run/john zip.hashes`  
+`john/run/john hash.txt`  
 ```console
 Using default input encoding: UTF-8
 Loaded 1 password hash (PKZIP [32/64])
@@ -445,16 +451,16 @@ Almost done: Processing the remaining buffered candidate passwords, if any.
 0g 0:00:00:00 DONE 1/3 (2024-02-11 15:20) 0g/s 411318p/s 411318c/s 411318C/s Txtout1900..Tsecret1900
 Proceeding with wordlist:john/run/password.lst
 Enabling duplicate candidate password suppressor
-andes            (out.zip/secret.txt)     
+andes            (file.zip/secret.txt)     
 1g 0:00:00:00 DONE 2/3 (2024-02-11 15:20) 1.098g/s 639363p/s 639363c/s 639363C/s poussinet..nisa1234
 Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
-##### The password is `andes`
+##### Fine, the password is `andes`
 
 `unzip file.zip`  
 ```console
-Archive:  out.zip
+Archive:  file.zip
 [out.zip] secret.txt password: 
  extracting: secret.txt
 ```
@@ -475,7 +481,7 @@ drwxr-xr-x  2 admin admin 4096 Feb 13  2023 agent
 drwxr-xr-x 10 admin admin 4096 Feb 13  2023 john
 -rw-r--r--  1 admin admin  215 Feb 11 15:19 file.zip
 -rw-r--r--  1 admin admin   17 Feb 13  2023 secret.txt
--rw-r--r--  1 admin admin  160 Feb 11 15:19 zip.hashes
+-rw-r--r--  1 admin admin  160 Feb 11 15:19 hash.txt
 ```
 
 `cat secret.txt`  
