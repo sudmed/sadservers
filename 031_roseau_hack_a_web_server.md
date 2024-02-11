@@ -387,18 +387,18 @@ secret.txtUT    âcâcux
 secret.txtUTâcux
                 PKPq
 ```
-##### STDOUT says nothing, let's download this file
+##### The output to  terminal says us nothing, let's download this file
 
-`curl http://carlos:chalet@localhost/webfile -o - | file -`  
+`curl http://carlos:chalet@localhost/webfile --output - | file -`  
 ```console
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100   215  100   215    0     0   104k      0 --:--:-- --:--:-- --:--:--  104k
 /dev/stdin: Zip archive data, at least v1.0 to extract
 ```
-##### The curl says that this is `/dev/stdin: Zip archive data`. OK, let's download as zip file
+##### The curl says that this is `Zip archive data`. OK, let's download as a zip file
 
-`curl http://carlos:chalet@localhost/webfile -o file.zip`  
+`curl http://carlos:chalet@localhost/webfile --output file.zip`  
 ```console
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
@@ -427,13 +427,14 @@ drwxr-xr-x 10 admin admin 4096 Feb 13  2023 john
 Archive:  file.zip
 [file.zip] secret.txt password: 
 ```
-##### It is a password-protected ZIP archive. John-the-ripper will help us again.
+#### It is a password-protected ZIP archive and john-the-ripper will help us again!
 ##### Fast googling by prompt `john the ripper how to crack zip archive` says that it is not easy-peasy, but also easy:
 ##### A) Convert the ZIP file: John the Ripper requires the ZIP file to be in a certain format for cracking. You can use the zip2john utility provided by John the Ripper to convert the ZIP file. Here's an example of how to use it:
 ##### $ zip2john file.zip > hash.txt
 ##### B) Crack the password: Now, you can use John the Ripper to crack the converted hash file. Run the following command:
 ##### $ john hash.txt
 ##### John the Ripper will start its password cracking process, trying different combinations until it finds the correct password. The time it takes to crack the password depends on the complexity of the password and the system's computational resources.
+#### Let's crack it
 
 `john/run/zip2john file.zip > hash.txt`  
 ```console
