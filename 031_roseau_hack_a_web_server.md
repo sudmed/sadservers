@@ -345,6 +345,372 @@ drwxr-xr-x  2 root root  4096 Feb 13  2023 sites-enabled
 carlos:$apr1$b1kyfnHB$yRHwzbuKSMyW62QTnGYCb0
 ```
 ##### We have login `carlos` and some encrypted password. Let's brutforce it by john-the-ripper tool.
+
+#### Benchmarking john-the-ripper tool
+
+<details>
+
+  <summary>`cd ~/john/run/ && ./john --test`</summary>
+
+```console
+Benchmarking: descrypt, traditional crypt(3) [DES 256/256 AVX2]... (2xOMP) DONE
+Many salts:     5068K c/s real, 2534K c/s virtual
+Only one salt:  4644K c/s real, 2322K c/s virtual
+
+Benchmarking: bsdicrypt, BSDI crypt(3) ("_J9..", 725 iterations) [DES 256/256 AVX2]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 725
+Many salts:     172544 c/s real, 86272 c/s virtual
+Only one salt:  169472 c/s real, 84736 c/s virtual
+
+Benchmarking: md5crypt, crypt(3) $1$ (and variants) [MD5 256/256 AVX2 8x3]... (2xOMP) DONE
+Many salts:     48000 c/s real, 24000 c/s virtual
+Only one salt:  48000 c/s real, 24000 c/s virtual
+
+Benchmarking: md5crypt-long, crypt(3) $1$ (and variants) [MD5 32/64]... (2xOMP) DONE
+Raw:    8848 c/s real, 4424 c/s virtual
+
+Benchmarking: bcrypt ("$2a$05", 32 iterations) [Blowfish 32/64 X3]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 32
+Raw:    1450 c/s real, 729 c/s virtual
+
+Benchmarking: scrypt (16384, 8, 1) [Salsa20/8 128/128 AVX]... (2xOMP) DONE
+Speed for cost 1 (N) of 16384, cost 2 (r) of 8, cost 3 (p) of 1
+Raw:    52.7 c/s real, 26.3 c/s virtual
+
+Benchmarking: LM [DES 256/256 AVX2]... (2xOMP) DONE
+Raw:    43954K c/s real, 22540K c/s virtual
+
+Benchmarking: AFS, Kerberos AFS [DES 48/64 4K]... DONE
+Short:  388608 c/s real, 386674 c/s virtual
+Long:   389248 c/s real, 389248 c/s virtual
+
+Benchmarking: tripcode [DES 256/256 AVX2]... (2xOMP) DONE
+Raw:    1923K c/s real, 964245 c/s virtual
+
+Benchmarking: AndroidBackup [PBKDF2-SHA1 256/256 AVX2 8x AES]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 10000
+Raw:    504 c/s real, 251 c/s virtual
+
+Benchmarking: adxcrypt, IBM/Toshiba 4690 [ADXCRYPT 32/64]... (2xOMP) DONE
+Raw:    36908K c/s real, 18546K c/s virtual
+
+Benchmarking: agilekeychain, 1Password Agile Keychain [PBKDF2-SHA1 AES 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 1000
+Raw:    9998 c/s real, 5024 c/s virtual
+
+Benchmarking: aix-ssha1, AIX LPA {ssha1} [PBKDF2-SHA1 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 64
+Many salts:     153504 c/s real, 77137 c/s virtual
+Only one salt:  153696 c/s real, 76848 c/s virtual
+
+Benchmarking: aix-ssha256, AIX LPA {ssha256} [PBKDF2-SHA256 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 64
+Many salts:     58272 c/s real, 29209 c/s virtual
+Only one salt:  58176 c/s real, 29088 c/s virtual
+
+Benchmarking: aix-ssha512, AIX LPA {ssha512} [PBKDF2-SHA512 256/256 AVX2 4x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 64
+Many salts:     22880 c/s real, 11440 c/s virtual
+Only one salt:  22896 c/s real, 11419 c/s virtual
+
+Benchmarking: andOTP [SHA256 32/64]... (2xOMP) DONE
+Raw:    333824 c/s real, 166495 c/s virtual
+
+Benchmarking: ansible, Ansible Vault [PBKDF2-SHA256 HMAC-256 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 10000
+Raw:    374 c/s real, 187 c/s virtual
+
+Benchmarking: argon2 [Blake2 AVX]... (2xOMP) DONE
+Speed for cost 1 (t) of 3, cost 2 (m) of 4096, cost 3 (p) of 1, cost 4 (type [0:Argon2d 1:Argon2i]) of 0 and 1
+Raw:    197 c/s real, 98.8 c/s virtual
+
+Benchmarking: as400-des, AS/400 DES [DES 32/64]... DONE
+Raw:    1146K c/s real, 573250 c/s virtual
+
+Benchmarking: as400-ssha1, AS400-SaltedSHA1 [sha1(utf16be(space_pad_10(uc($s)).$p)) (IBM AS/400 SHA1) 256/256 AVX2 8x1]... DONE
+Many salts:     8942K c/s real, 8942K c/s virtual
+Only one salt:  7820K c/s real, 7820K c/s virtual
+
+Benchmarking: asa-md5, Cisco ASA [md5($p.$s) (Cisco ASA) 256/256 AVX2 8x3]... DONE
+Many salts:     20386K c/s real, 20386K c/s virtual
+Only one salt:  14701K c/s real, 14701K c/s virtual
+
+Benchmarking: AxCrypt [PBKDF2-SHA512/SHA1 AES 32/64]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 1337 and 60000
+Raw:    193 c/s real, 97.3 c/s virtual
+
+Benchmarking: AzureAD [PBKDF2-SHA256 256/256 AVX2 8x]... (2xOMP) DONE
+Many salts:     37376 c/s real, 18688 c/s virtual
+Only one salt:  37120 c/s real, 18560 c/s virtual
+
+Benchmarking: BestCrypt, Jetico BestCrypt (.jbc) (SHA-256 + AES XTS mode) [PKCS#12 PBE (SHA1/SHA2) 32/64]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 16384
+Raw:    525 c/s real, 262 c/s virtual
+
+Benchmarking: BestCryptVE4, BestCrypt Volume Encryption v4 (32768, 16, 1) [scrypt Salsa20/8 128/128 AVX, AES/TwoFish/Serpent/Camellia]... (2xOMP) DONE
+Raw:    13.5 c/s real, 6.7 c/s virtual
+
+Benchmarking: bfegg, Eggdrop [Blowfish 32/64]... (2xOMP) DONE
+Raw:    47379 c/s real, 23689 c/s virtual
+
+Benchmarking: Bitcoin, Bitcoin Core [SHA512 AES 256/256 AVX2 4x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 200460
+Raw:    15.0 c/s real, 7.5 c/s virtual
+
+Benchmarking: BitLocker, BitLocker [SHA-256 AES 32/64]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 1048576
+Raw:    10.8 c/s real, 5.4 c/s virtual
+
+Benchmarking: bitshares, BitShares Wallet [SHA-512 64/64]... (2xOMP) DONE
+Many salts:     1327K c/s real, 663808 c/s virtual
+Only one salt:  1305K c/s real, 652544 c/s virtual
+
+Benchmarking: Bitwarden, Bitwarden Password Manager [PBKDF2-SHA256 AES 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 5000
+Raw:    749 c/s real, 374 c/s virtual
+
+Benchmarking: BKS, BouncyCastle [PKCS#12 PBE (SHA1) 256/256 AVX2 8x]... (2xOMP) DONE
+Raw:    9941 c/s real, 4970 c/s virtual
+
+Benchmarking: Blackberry-ES10 (101x) [SHA-512 256/256 AVX2 4x]... (2xOMP) DONE
+Many salts:     30062 c/s real, 15065 c/s virtual
+Only one salt:  29930 c/s real, 15002 c/s virtual
+
+Benchmarking: WoWSRP, Battlenet [SHA1 32/64 GMP-exp]... (2xOMP) DONE
+Many salts:     126976 c/s real, 63488 c/s virtual
+Only one salt:  123136 c/s real, 61722 c/s virtual
+
+Benchmarking: Blockchain, My Wallet (v2 x5000) [PBKDF2-SHA1 AES 256/256 AVX2 8x]... (2xOMP) DONE
+Raw:    984 c/s real, 491 c/s virtual
+
+Benchmarking: cardano, Cardano Encrypted 128-byte Secret Key (a.k.a XPrv) [PBKDF2-SHA512/BLAKE2b/ChaCha20 256/256 AVX2 4x]... (2xOMP) DONE
+Raw:    99.0 c/s real, 49.5 c/s virtual
+
+Benchmarking: chap, iSCSI CHAP authentication / EAP-MD5 [MD5 32/64]... (2xOMP) DONE
+Many salts:     8290K c/s real, 4155K c/s virtual
+Only one salt:  7653K c/s real, 3836K c/s virtual
+
+Benchmarking: Clipperz, SRP [SHA256 32/64 GMP-exp]... (2xOMP) DONE
+Raw:    58077 c/s real, 29038 c/s virtual
+
+Benchmarking: cloudkeychain, 1Password Cloud Keychain [PBKDF2-SHA512 256/256 AVX2 4x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 40000 and 50000
+Raw:    32.7 c/s real, 16.4 c/s virtual
+
+Benchmarking: dynamic=md5($p) [256/256 AVX2 8x3]... DONE
+Raw:    29023K c/s real, 29023K c/s virtual
+
+Benchmarking: cq, ClearQuest [CQWeb]... (2xOMP) DONE
+Many salts:     78577K c/s real, 39288K c/s virtual
+Only one salt:  32407K c/s real, 16203K c/s virtual
+
+Benchmarking: CRC32 [CRC32 32/64 CRC-32C AVX]... DONE
+Speed for cost 1 (version [0:CRC-32 1:CRC-32C]) of 0
+Many salts:     92987K c/s real, 92987K c/s virtual
+Only one salt:  46804K c/s real, 46804K c/s virtual
+
+Benchmarking: cryptoSafe [AES-256-CBC]... (2xOMP) DONE
+Raw:    3374K c/s real, 1687K c/s virtual
+
+Benchmarking: sha1crypt, NetBSD's sha1crypt [PBKDF1-SHA1 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 20000
+Raw:    509 c/s real, 253 c/s virtual
+
+Benchmarking: sha256crypt, crypt(3) $5$ (rounds=5000) [SHA256 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 5000
+Raw:    894 c/s real, 448 c/s virtual
+
+Benchmarking: sha512crypt, crypt(3) $6$ (rounds=5000) [SHA512 256/256 AVX2 4x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 5000
+Raw:    579 c/s real, 289 c/s virtual
+
+Benchmarking: Citrix_NS10, Netscaler 10 [SHA1 256/256 AVX2 8x]... (2xOMP) DONE
+Many salts:     18299K c/s real, 9195K c/s virtual
+Only one salt:  15015K c/s real, 7507K c/s virtual
+
+Benchmarking: dahua, "MD5 based authentication" Dahua [MD5 32/64]... DONE
+Raw:    4621K c/s real, 4621K c/s virtual
+
+Benchmarking: dashlane, Dashlane Password Manager [AES PBKDF2-SHA1 256/256 AVX2 8x]... (2xOMP) DONE
+Raw:    494 c/s real, 247 c/s virtual
+
+Benchmarking: diskcryptor, DiskCryptor [PBKDF2-SHA512 256/256 AVX2 4x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 1000
+Raw:    1473 c/s real, 736 c/s virtual
+
+Benchmarking: Django (x10000) [PBKDF2-SHA256 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 10000
+Raw:    372 c/s real, 185 c/s virtual
+
+Benchmarking: django-scrypt [Salsa20/8 128/128 AVX]... (2xOMP) DONE
+Speed for cost 1 (N) of 14, cost 2 (r) of 8, cost 3 (p) of 1
+Raw:    52.7 c/s real, 26.4 c/s virtual
+
+Benchmarking: dmd5, DIGEST-MD5 C/R [MD5 32/64]... (2xOMP) DONE
+Many salts:     2373K c/s real, 1186K c/s virtual
+Only one salt:  2308K c/s real, 1160K c/s virtual
+
+Benchmarking: dmg, Apple DMG [PBKDF2-SHA1 256/256 AVX2 8x 3DES/AES]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 1000, cost 2 (version) of 2 and 1
+Raw:    4401 c/s real, 2206 c/s virtual
+
+Benchmarking: dominosec, Lotus Notes/Domino 6 More Secure Internet Password [8/64]... (2xOMP) DONE
+Many salts:     352992 c/s real, 176938 c/s virtual
+Only one salt:  234816 c/s real, 117408 c/s virtual
+
+Benchmarking: dominosec8, Lotus Notes/Domino 8 [8/64]... (2xOMP) DONE
+Raw:    1890 c/s real, 945 c/s virtual
+
+Benchmarking: DPAPImk, DPAPI masterkey file v1 and v2 [SHA1/MD4 PBKDF2-(SHA1/SHA512)-DPAPI-variant 3DES/AES256 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 24000
+Raw:    206 c/s real, 103 c/s virtual
+
+Benchmarking: dragonfly3-32, DragonFly BSD $3$ w/ bug, 32-bit [SHA256 32/64]... (2xOMP) DONE
+Many salts:     15442K c/s real, 7721K c/s virtual
+Only one salt:  12887K c/s real, 6459K c/s virtual
+
+Benchmarking: dragonfly3-64, DragonFly BSD $3$ w/ bug, 64-bit [SHA256 32/64]... (2xOMP) DONE
+Many salts:     15358K c/s real, 7679K c/s virtual
+Only one salt:  12763K c/s real, 6397K c/s virtual
+
+Benchmarking: dragonfly4-32, DragonFly BSD $4$ w/ bugs, 32-bit [SHA512 64/64]... (2xOMP) DONE
+Many salts:     2663K c/s real, 1335K c/s virtual
+Only one salt:  2617K c/s real, 1308K c/s virtual
+
+Benchmarking: dragonfly4-64, DragonFly BSD $4$ w/ bugs, 64-bit [SHA512 64/64]... (2xOMP) DONE
+Many salts:     2713K c/s real, 1356K c/s virtual
+Only one salt:  2624K c/s real, 1312K c/s virtual
+
+Benchmarking: Drupal7, $S$ (x16385) [SHA512 256/256 AVX2 4x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 16384
+Raw:    182 c/s real, 90.8 c/s virtual
+
+Benchmarking: eCryptfs (65536 iterations) [SHA512 256/256 AVX2 4x]... (2xOMP) DONE
+Raw:    45.9 c/s real, 22.9 c/s virtual
+
+Benchmarking: eigrp, EIGRP MD5 / HMAC-SHA-256 authentication [MD5/SHA-256 32/64]... (2xOMP) DONE
+Speed for cost 1 (algorithm [2:MD5 3:HMAC-SHA-256]) of 2
+Many salts:     5531K c/s real, 2779K c/s virtual
+Only one salt:  5154K c/s real, 2577K c/s virtual
+
+Benchmarking: electrum, Electrum Wallet [SHA256 AES / PBKDF2-SHA512 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (kdf [1:SHA256 2:PBKDF2-SHA512]) of 1 and 2
+Raw:    2324 c/s real, 1162 c/s virtual
+
+Benchmarking: ENCDataVault-MD5 [MD5, AES]... (2xOMP) DONE
+Raw:    9584 c/s real, 4816 c/s virtual
+
+Benchmarking: ENCDataVault-PBKDF2 [PBKDF2-HMAC-SHA256 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iterations) of 100000
+Raw:    14.8 c/s real, 7.4 c/s virtual
+
+Benchmarking: EncFS [PBKDF2-SHA1 256/256 AVX2 8x AES]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 181474
+Raw:    27.7 c/s real, 13.8 c/s virtual
+
+Benchmarking: enpass, Enpass Password Manager [PBKDF2-SHA1/SHA512 256/256 AVX2 4x]... (2xOMP) DONE
+Speed for cost 1 (Enpass version) of 5
+Raw:    209 c/s real, 104 c/s virtual
+
+Benchmarking: EPI, EPiServer SID [SHA1 32/64]... (2xOMP) DONE
+Many salts:     16674K c/s real, 8337K c/s virtual
+Only one salt:  13479K c/s real, 6756K c/s virtual
+
+Benchmarking: EPiServer [SHA1/SHA256 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (hash type [1:SHA1 2:SHA256]) of 1
+Many salts:     16502K c/s real, 8272K c/s virtual
+Only one salt:  15810K c/s real, 7905K c/s virtual
+
+Benchmarking: ethereum, Ethereum Wallet [PBKDF2-SHA256/scrypt Keccak 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 262144, cost 2 (kdf [0:PBKDF2-SHA256 1:scrypt 2:PBKDF2-SHA256 presale]) of 0
+Raw:    14.2 c/s real, 7.1 c/s virtual
+
+Benchmarking: fde, Android FDE [PBKDF2-SHA1 256/256 AVX2 8x SHA256/AES]... (2xOMP) DONE
+Raw:    2509 c/s real, 1254 c/s virtual
+
+Benchmarking: Fortigate256, FortiOS256 [SHA256 32/64]... (2xOMP) DONE
+Many salts:     14395K c/s real, 7197K c/s virtual
+Only one salt:  12115K c/s real, 6057K c/s virtual
+
+Benchmarking: Fortigate, FortiOS [SHA1 32/64]... (2xOMP) DONE
+Many salts:     16318K c/s real, 8159K c/s virtual
+Only one salt:  13634K c/s real, 6834K c/s virtual
+
+Benchmarking: FormSpring [sha256($s.$p) 256/256 AVX2 8x]... DONE
+Many salts:     5260K c/s real, 5260K c/s virtual
+Only one salt:  4858K c/s real, 4858K c/s virtual
+
+Benchmarking: FVDE, FileVault 2 [PBKDF2-SHA256 AES 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 41000 and 70400
+Raw:    65.1 c/s real, 32.6 c/s virtual
+
+Benchmarking: geli, FreeBSD GELI [PBKDF2-SHA512 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 256 and 512
+Raw:    3757 c/s real, 1878 c/s virtual
+
+Benchmarking: gost, GOST R 34.11-94 [64/64]... (2xOMP) DONE
+Raw:    727808 c/s real, 364816 c/s virtual
+
+Benchmarking: gpg, OpenPGP / GnuPG Secret Key [32/64]... (2xOMP) DONE
+Speed for cost 1 (s2k-count) of 65536, cost 2 (hash algorithm [1:MD5 2:SHA1 3:RIPEMD160 8:SHA256 9:SHA384 10:SHA512 11:SHA224]) of 2, cost 3 (cipher algorithm [1:IDEA 2:3DES 3:CAST5 4:Blowfish 7:AES128 8:AES192 9:AES256 10:Twofish 11:Camellia128 12:Camellia192 13:Camellia256]) of 3
+Raw:    29614 c/s real, 14807 c/s virtual
+
+Benchmarking: HAVAL-128-4 [32/64]... DONE
+Raw:    2471K c/s real, 2471K c/s virtual
+
+Benchmarking: HAVAL-256-3 [32/64]... DONE
+Raw:    3435K c/s real, 3435K c/s virtual
+
+Benchmarking: hdaa, HTTP Digest access authentication [MD5 256/256 AVX2 8x3]... DONE
+Many salts:     5205K c/s real, 5205K c/s virtual
+Only one salt:  4784K c/s real, 4784K c/s virtual
+
+Benchmarking: hMailServer [sha256($s.$p) 256/256 AVX2 8x]... DONE
+Many salts:     5256K c/s real, 5256K c/s virtual
+Only one salt:  4830K c/s real, 4830K c/s virtual
+
+Benchmarking: hsrp, "MD5 authentication" HSRP, HSRPv2, VRRP, GLBP [MD5 32/64]... (2xOMP) DONE
+Many salts:     5457K c/s real, 2735K c/s virtual
+Only one salt:  3432K c/s real, 1711K c/s virtual
+
+Benchmarking: IKE, PSK [HMAC MD5/SHA1 32/64]... (2xOMP) DONE
+Speed for cost 1 (hash algorithm used for hmac [1:MD5 2:SHA1]) of 1 and 2
+Raw:    1207K c/s real, 605160 c/s virtual
+
+Benchmarking: ipb2, Invision Power Board 2.x [MD5 256/256 AVX2 8x3]... (2xOMP) DONE
+Many salts:     9867K c/s real, 4933K c/s virtual
+Only one salt:  8749K c/s real, 4374K c/s virtual
+
+Benchmarking: itunes-backup, Apple iTunes Backup [PBKDF2-SHA1 AES 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (version) of 9 and 10, cost 2 (iteration count) of 10000
+Raw:    469 c/s real, 235 c/s virtual
+
+Benchmarking: iwork, Apple iWork '09 or newer [PBKDF2-SHA1 AES 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 100000
+Raw:    100 c/s real, 50.2 c/s virtual
+
+Benchmarking: KeePass [SHA256 AES 32/64]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 50000 and 6000, cost 2 (version) of 1 and 2, cost 3 (algorithm [0=AES 1=TwoFish 2=ChaCha]) of 0
+Raw:    184 c/s real, 92.7 c/s virtual
+
+Benchmarking: keychain, Mac OS X Keychain [PBKDF2-SHA1 3DES 256/256 AVX2 8x]... (2xOMP) DONE
+Raw:    4995 c/s real, 2497 c/s virtual
+
+Benchmarking: keyring, GNOME Keyring [SHA256 AES 256/256 AVX2 8x]... (2xOMP) DONE
+Speed for cost 1 (iteration count) of 3221
+Raw:    2359 c/s real, 1185 c/s virtual
+
+Benchmarking: keystore, Java KeyStore [SHA1 256/256 AVX2 8x]... (2xOMP) DONE
+Warning: "Many salts" test limited: 9/256
+Many salts:     581107 c/s real, 290553 c/s virtual
+Only one salt:  583984 c/s real, 292716 c/s virtual
+
+Benchmarking: known_hosts, HashKnownHosts HMAC-SHA1 [SHA1 32/64]... (2xOMP)
+```
+
+</details>
+
+
 ##### Fast googling by prompt `john the ripper how to crack .htpasswd` says that it is easy-peasy: `john htpasswd`
 
 `/home/admin/john/run/john /etc/apache2/.htpasswd`  
