@@ -99,8 +99,7 @@ Linux i-06f035d3f9f17bb2c 5.10.0-21-cloud-amd64 #1 SMP Debian 5.10.162-1 (2023-0
 Resolving download.oracle.com (download.oracle.com)... 23.221.244.113
 Connecting to download.oracle.com (download.oracle.com)|23.221.244.113|:443... ^C
 ```
-##### No internet connection on the host. 
-##### OK, maybe new version is just pre-installed
+##### No internet connection on the host. Okay, maybe new version was pre-installed
 
 `which java`  
 ```console
