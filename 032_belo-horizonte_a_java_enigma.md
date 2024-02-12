@@ -156,27 +156,36 @@ Swap:              0           0           0
 ```
 ##### We have 455 Mb total memory only and no swap at all. We cannot add RAM, but we can add swap file
 
-`sudo fallocate -l 1G /swapfile`  
+`sudo fallocate -l 2G /swapfile`  
 `sudo mkswap /swapfile`  
 ```console
 mkswap: /swapfile: insecure permissions 0644, 0600 suggested.
-Setting up swapspace version 1, size = 1024 MiB (1073737728 bytes)
-no label, UUID=bac734d2-42df-4964-be19-b61f86669cb4
+Setting up swapspace version 1, size = 2 GiB (2147479552 bytes)
+no label, UUID=3d9197c9-0b82-41a1-8b1b-3bbf84a06129
 ```
 
+`sudo chmod 600 /swapfile`  
+`sudo swapon /swapfile`  
 `swapon --show`  
 ```console
-NAME      TYPE  SIZE USED PRIO
-/swapfile file 1024M   0B   -2
+NAME      TYPE SIZE USED PRIO
+/swapfile file   2G   0B   -2
 ```
 
 `free -m`  
 ```console
                total        used        free      shared  buff/cache   available
-Mem:             455          60         161           0         234         383
-Swap:           1023           0        1023
+Mem:             455          61         231           0         162         382
+Swap:           2047           0        2047
 ```
 ##### Now we can run java Let's run now
+
+`/usr/lib/jvm/java-17-openjdk-amd64/bin/java VerySad`  
+```console
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+        at VerySad.main(VerySad.java:4)
+```
+##### If we are experiencing memory issues and need more memory from virtual memory, we can use the command-line options `-Xmx` and `-Xms`
 
 `/usr/lib/jvm/java-17-openjdk-amd64/bin/java -Xms1g -Xmx1g VerySad`  
 ```console
