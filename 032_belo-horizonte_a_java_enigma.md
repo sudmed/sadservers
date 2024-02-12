@@ -138,7 +138,7 @@ drwxr-xr-x  2 root root 4096 Mar  5  2023 openjdk-17
 Error: Could not find or load main class Sad
 Caused by: java.lang.NoClassDefFoundError: VerySad (wrong name: Sad)
 ```
-##### We have an error: VerySad (wrong name: Sad). Let's rename the file
+##### We have an error: VerySad (wrong name: Sad). Let's rename the file and run it again
 
 `mv Sad.class VerySad.class`  
 `/usr/lib/jvm/java-17-openjdk-amd64/bin/java VerySad`  
@@ -146,7 +146,7 @@ Caused by: java.lang.NoClassDefFoundError: VerySad (wrong name: Sad)
 Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
         at VerySad.main(VerySad.java:4)
 ```
-##### We have new error: OutOfMemoryError: Java heap space. Let's check RAM
+##### We have new error now: OutOfMemoryError: Java heap space. Let's check RAM
 
 `free -m`  
 ```console
@@ -154,7 +154,7 @@ Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
 Mem:             455          59         168           0         227         383
 Swap:              0           0           0
 ```
-##### We have 455 Mb total memory and no swap. We cannot add RAM, but we can add swap file
+##### We have 455 Mb total memory only and no swap at all. We cannot add RAM, but we can add swap file
 
 `sudo fallocate -l 1G /swapfile`  
 `sudo mkswap /swapfile`  
@@ -176,7 +176,7 @@ NAME      TYPE  SIZE USED PRIO
 Mem:             455          60         161           0         234         383
 Swap:           1023           0        1023
 ```
-##### Let's run now
+##### Now we can run java Let's run now
 
 `/usr/lib/jvm/java-17-openjdk-amd64/bin/java -Xms1g -Xmx1g VerySad`  
 ```console
