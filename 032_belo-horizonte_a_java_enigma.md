@@ -86,7 +86,7 @@ openjdk version "11.0.18" 2023-01-17
 OpenJDK Runtime Environment (build 11.0.18+10-post-Debian-1deb11u1)
 OpenJDK 64-Bit Server VM (build 11.0.18+10-post-Debian-1deb11u1, mixed mode, sharing)
 ```
-##### Wrong error of Java Runtime, current version recognizes class file versions up to 55.0, but we need 61.0 or above. Try to download new version, first check which Linux is here
+##### Wrong version of Java Runtime. Current version recognizes class file versions up to 55.0, but we need 61.0 or above. Try to download new version, first check which Linux is here
 
 `uname -a`  
 ```console
