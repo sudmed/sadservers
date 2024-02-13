@@ -67,6 +67,7 @@ d"webserver_v1.pyTREE1 0
 ~ӵsS\Zc(m9VH`
              %s#a>Nm
 ```
+##### We can see some python file name `webserver_v1.py`
 
 `git status`  
 ```console
@@ -88,7 +89,7 @@ Untracked files:
 
 no changes added to commit (use "git add" and/or "git commit -a")
 ```
-##### HAHAHA! There is one deleted file, let's restore it
+##### HAHAHA! There is a deleted file named `webserver_v1.py`, let's restore it
 
 `git restore .`  
 `ls -la`  
