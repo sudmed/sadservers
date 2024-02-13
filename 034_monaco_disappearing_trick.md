@@ -181,15 +181,15 @@ if __name__ == '__main__':
 ```console
 Access denied!
 ```
-##### We can see interesting construction in the `webserver_v1.py` file: `super_secret_password = os.environ.get('SUPERSECRETPASSWORD')`.  
-##### This code snippet retrieves the value of an environment variable named 'SUPERSECRETPASSWORD' using the `os.environ.get()` method.
+##### We saw an interesting construction in the `webserver_v1.py` file: `super_secret_password = os.environ.get('SUPERSECRETPASSWORD')`
+##### This code snippet retrieves the value of an environment variable named 'SUPERSECRETPASSWORD' using the `os.environ.get()` method
 ##### Let's try to get it from terminal
 
 `echo $SUPERSECRETPASSWORD`  
 ```console
 <empty>
 ```
-##### Searching in `~/.bashrc` or `~/.profile` also failed. 
+##### Searching in `~/.bashrc` or `~/.profile` also failed
 ##### Let's inspect the file descriptor-based environment
 
 `lsof -i :5000`  
