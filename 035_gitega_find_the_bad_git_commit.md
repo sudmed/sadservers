@@ -84,6 +84,7 @@ Aug 31 14:45:39 i-02c27891642c72a9d ec2: -----END SSH HOST KEY FINGERPRINTS-----
 Aug 31 14:45:39 i-02c27891642c72a9d ec2: #############################################################
 ```
 
+#### 2. Check git
 `cd /home/admin/git && git status`
 ```console
 On branch main
@@ -97,6 +98,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
+#### 3. Run test
 `go test`
 ```console
 --- FAIL: TestHandler (0.00s)
@@ -107,6 +109,7 @@ exit status 1
 FAIL    github.com/fduran/git_bisect    0.005s
 ```
 
+#### 4. Check git log
 `git log`
 ```console
 commit f2e018e090afa14f0961bb221d6a6e1b506afb3e (HEAD -> main, origin/main, origin/HEAD)
@@ -204,7 +207,7 @@ Date:   Sun Jun 2 19:42:00 2024 -0400
 ~
 ```
 
-#### 2. Get long hashes of the commits
+#### 5. Get only long hashes of the commits
 `git log --format=%H`
 ```console
 f2e018e090afa14f0961bb221d6a6e1b506afb3e
@@ -218,7 +221,7 @@ c21bcc402cf8e1344b81892ba539602964b4ad56
 9e80a7eb1b09385e93ab4a76cb2c93beec48fd9f
 ```
 
-##### and hashes of the commits in reverse order
+#### 6. Reversed order of hashes needed
 `git log --format=%H --reverse`
 ```console
 9e80a7eb1b09385e93ab4a76cb2c93beec48fd9f
@@ -232,7 +235,7 @@ c21bcc402cf8e1344b81892ba539602964b4ad56
 f2e018e090afa14f0961bb221d6a6e1b506afb3e
 ```
 
-#### 3. Create simple script for testing those hashes
+#### 7. Create simple script for testing all commits by `go test` with for-loop statement
 ```bash
 for i in $(git log --format=%H --reverse); do
   git checkout $i &>/dev/null && go test || break
@@ -257,11 +260,11 @@ FAIL    myproject       0.003s
 2e44089778e44dcd9b97aa3baacdcff10311841b
 ```
 
-##### and save finded hashe to the solution file
+#### 8. Save finded commit's hashe to the solution file
 `echo 2e44089778e44dcd9b97aa3baacdcff10311841b > /home/admin/solution`
 
 
-#### 4. Validate the task
+#### 9. Validate the task
 `md5sum /home/admin/solution`
 ```console
 f7db1bb6b7bfcd66a4eb66782804b39d  /home/admin/solution
