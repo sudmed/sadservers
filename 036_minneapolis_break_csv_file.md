@@ -482,7 +482,10 @@ Province,Electoral District Name/Nom de circonscription,Electoral District Numbe
 ```
 
 #### 3. Split the `data.csv` file on 10 smaller files
-`split -d -n 10 /home/admin/data.csv /home/admin/data-`  
+```bash
+split -d -n 10 /home/admin/data.csv /home/admin/data-
+```
+
 `la -la`  
 ```console
 total 668
