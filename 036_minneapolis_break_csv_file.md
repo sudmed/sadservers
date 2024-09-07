@@ -473,7 +473,9 @@ echo -n "OK"
 ```
 
 #### 2. Make file with header
-`head -1 /home/admin/data.csv > /home/admin/header.txt`  
+```bash
+head -1 /home/admin/data.csv > /home/admin/header.txt
+```  
 `cat /home/admin/header.txt`  
 ```text
 Province,Electoral District Name/Nom de circonscription,Electoral District Number/Numéro de circonscription,Candidate/Candidat,Candidate Residence/Résidence du candidat,Candidate Occupation/Profession du candidat,Votes Obtained/Votes obtenus,Percentage of Votes Obtained /Pourcentage des votes obtenus,Majority/Majorité,Majority Percentage/Pourcentage de majorité
