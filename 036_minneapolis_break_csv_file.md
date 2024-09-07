@@ -442,3 +442,140 @@ Province,Electoral District Name/Nom de circonscription,Electoral District Numbe
 
 </details>
 
+
+`cat /home/admin/agent/check.sh`
+```bash
+#!/usr/bin/bash
+# DO NOT MODIFY THIS FILE ("Check My Solution" will fail)
+
+cd /home/admin
+
+expected_header=$(head -n 1 data.csv)
+threshold=$((32 * 1024))
+minlines=100
+
+for i in {0..9}; do
+    file="data-0$i.csv"
+
+    if [[ -f "$file" ]]; then
+        file_header=$(head -n 1 "$file")
+        if [[ "$file_header" != "$expected_header" ]]; then
+            echo -n "NO"
+            exit
+        fi
+
+        filesize=$(stat -c%s "$file")
+        if (( filesize > threshold )); then
+            echo -n "NO"
+            exit
+        fi
+
+        lines=$(wc -l < "$file")
+        if (( lines < minlines )); then
+            echo -n "NO"
+            exit
+        fi
+    else
+        echo -n "NO"
+        exit
+    fi
+done
+
+echo -n "OK"
+```
+
+#### 2. Make file with header
+`head -1 /home/admin/data.csv > /home/admin/header.txt`
+`cat /home/admin/header.txt`
+```text
+Province,Electoral District Name/Nom de circonscription,Electoral District Number/Numéro de circonscription,Candidate/Candidat,Candidate Residence/Résidence du candidat,Candidate Occupation/Profession du candidat,Votes Obtained/Votes obtenus,Percentage of Votes Obtained /Pourcentage des votes obtenus,Majority/Majorité,Majority Percentage/Pourcentage de majorité
+```
+
+#### 3. Split the `data.csv` file on 10 smaller files
+`split -d -n 10 /home/admin/data.csv /home/admin/data-`  
+`la -la`  
+```console
+total 668
+drwxr-xr-x 5 admin admin   4096 Sep  7 16:27 .
+drwxr-xr-x 3 root  root    4096 Feb 17  2024 ..
+drwx------ 3 admin admin   4096 Feb 17  2024 .ansible
+-rw-r--r-- 1 admin admin    220 Mar 27  2022 .bash_logout
+-rw-r--r-- 1 admin admin   3526 Mar 27  2022 .bashrc
+-rw-r--r-- 1 admin admin    807 Mar 27  2022 .profile
+drwx------ 2 admin admin   4096 Feb 17  2024 .ssh
+-rw-r--r-- 1 admin admin    422 Jul 20 16:49 README.txt
+drwxr-xr-x 2 admin root    4096 Jul 20 16:49 agent
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-00
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-01
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-02
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-03
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-04
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-05
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-06
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-07
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-08
+-rw-r--r-- 1 admin admin  31276 Sep  7 16:27 data-09
+-rw-r--r-- 1 admin admin 312715 Jul 20 16:49 data.csv
+-rw-r--r-- 1 admin admin    372 Sep  7 16:26 header.txt
+```
+
+#### 4. Add header to all files except `data-00`
+```bash
+for i in {0..9}; do
+    if [[ "$i" != "00" ]]; then
+        cat /home/admin/header.txt /home/admin/data-0$i > /home/admin/data-0$i.csv
+    fi
+done
+```
+
+`ls -la`
+```console
+total 988
+drwxr-xr-x 5 admin admin   4096 Sep  7 16:27 .
+drwxr-xr-x 3 root  root    4096 Feb 17  2024 ..
+drwx------ 3 admin admin   4096 Feb 17  2024 .ansible
+-rw-r--r-- 1 admin admin    220 Mar 27  2022 .bash_logout
+-rw-r--r-- 1 admin admin   3526 Mar 27  2022 .bashrc
+-rw-r--r-- 1 admin admin    807 Mar 27  2022 .profile
+drwx------ 2 admin admin   4096 Feb 17  2024 .ssh
+-rw-r--r-- 1 admin admin    422 Jul 20 16:49 README.txt
+drwxr-xr-x 2 admin root    4096 Jul 20 16:49 agent
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-00
+-rw-r--r-- 1 admin admin  31643 Sep  7 16:27 data-00.csv
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-01
+-rw-r--r-- 1 admin admin  31643 Sep  7 16:27 data-01.csv
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-02
+-rw-r--r-- 1 admin admin  31643 Sep  7 16:27 data-02.csv
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-03
+-rw-r--r-- 1 admin admin  31643 Sep  7 16:27 data-03.csv
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-04
+-rw-r--r-- 1 admin admin  31643 Sep  7 16:27 data-04.csv
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-05
+-rw-r--r-- 1 admin admin  31643 Sep  7 16:27 data-05.csv
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-06
+-rw-r--r-- 1 admin admin  31643 Sep  7 16:27 data-06.csv
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-07
+-rw-r--r-- 1 admin admin  31643 Sep  7 16:27 data-07.csv
+-rw-r--r-- 1 admin admin  31271 Sep  7 16:27 data-08
+-rw-r--r-- 1 admin admin  31643 Sep  7 16:27 data-08.csv
+-rw-r--r-- 1 admin admin  31276 Sep  7 16:27 data-09
+-rw-r--r-- 1 admin admin  31648 Sep  7 16:27 data-09.csv
+-rw-r--r-- 1 admin admin 312715 Jul 20 16:49 data.csv
+-rw-r--r-- 1 admin admin    372 Sep  7 16:26 header.txt
+```
+
+
+#### 5. Validate the task
+`bash /home/admin/agent/check.sh`  
+```console
+OK
+```
+
+---
+
+#### Clues
+```console
+1. Check the "split" command: man split
+2. split -d -n 10 data.csv data- breaks the data file into 10 files data-00 to data-09 of 31KB each but only data-00 has the CSV header.
+3. To add the header to all smaller files except data-00: first we get the header as a file: head -1 data.csv > header.txt and then we can do: for i in {0..9}; do cat header.txt data-0$i > data-0$i.csv; done
+```
