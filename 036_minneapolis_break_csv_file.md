@@ -11,7 +11,7 @@ Note: to simplify, disregard broken lines in your files (ie, you can break a fil
 
 ### Solution:
 #### 1. Reconnaissance on the server
-`ls -la`
+`ls -la`  
 ```console
 total 344
 drwxr-xr-x 5 admin admin   4096 Jul 20 16:49 .
@@ -26,14 +26,15 @@ drwxr-xr-x 2 admin root    4096 Jul 20 16:49 agent
 -rw-r--r-- 1 admin admin 312715 Jul 20 16:49 data.csv
 ```
 
-`cat README.txt`
+`cat README.txt`  
 ```console
 # "Minneapolis": Break a CSV file
 ## Description
 Break the Comma Separated Valued (CSV) file data.csv in the /home/admin/ directory into exactly 10 smaller files of about the same size named data-00.csv, data-01.csv, ... , data-09.csv files in the same directory. All the files should be CSV files and have the same header (first line with column names) as data.csv. None of the smaller files should be bigger than 32KB
 ```
 
-`head -n 400 data.csv`
+
+`head -n 400 data.csv`  
 <details>
   <summary>Spoiler text output</summary>
   
@@ -443,33 +444,27 @@ Province,Electoral District Name/Nom de circonscription,Electoral District Numbe
 </details>
 
 
-`cat /home/admin/agent/check.sh`
+`cat /home/admin/agent/check.sh`  
 ```bash
 #!/usr/bin/bash
 # DO NOT MODIFY THIS FILE ("Check My Solution" will fail)
-
 cd /home/admin
-
 expected_header=$(head -n 1 data.csv)
 threshold=$((32 * 1024))
 minlines=100
-
 for i in {0..9}; do
     file="data-0$i.csv"
-
     if [[ -f "$file" ]]; then
         file_header=$(head -n 1 "$file")
         if [[ "$file_header" != "$expected_header" ]]; then
             echo -n "NO"
             exit
         fi
-
         filesize=$(stat -c%s "$file")
         if (( filesize > threshold )); then
             echo -n "NO"
             exit
         fi
-
         lines=$(wc -l < "$file")
         if (( lines < minlines )); then
             echo -n "NO"
@@ -480,13 +475,12 @@ for i in {0..9}; do
         exit
     fi
 done
-
 echo -n "OK"
 ```
 
 #### 2. Make file with header
-`head -1 /home/admin/data.csv > /home/admin/header.txt`
-`cat /home/admin/header.txt`
+`head -1 /home/admin/data.csv > /home/admin/header.txt`  
+`cat /home/admin/header.txt`  
 ```text
 Province,Electoral District Name/Nom de circonscription,Electoral District Number/Numéro de circonscription,Candidate/Candidat,Candidate Residence/Résidence du candidat,Candidate Occupation/Profession du candidat,Votes Obtained/Votes obtenus,Percentage of Votes Obtained /Pourcentage des votes obtenus,Majority/Majorité,Majority Percentage/Pourcentage de majorité
 ```
@@ -528,7 +522,7 @@ for i in {0..9}; do
 done
 ```
 
-`ls -la`
+`ls -la`  
 ```console
 total 988
 drwxr-xr-x 5 admin admin   4096 Sep  7 16:27 .
