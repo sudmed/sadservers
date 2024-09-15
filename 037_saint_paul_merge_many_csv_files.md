@@ -913,6 +913,8 @@ OK
 ---
 
 #### Author's solution
-```bash  
-awk 'FNR==1 && NR!=1 {next} {print}' /home/admin/polldayregistrations_enregistjourduscrutin*.csv > /home/admin/all.csv
+```console
+Clues
+1. You can join all the files with cat polldayregistrations_*.csv > concat.csv and then take out all the header lines except the first one, or you can use Python code but there's an easier way using 'awk'
+2. One solution: awk 'FNR==1 && NR!=1 {next} {print}' polldayregistrations_*.csv > all.csv
 ```
